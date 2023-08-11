@@ -104,11 +104,7 @@ async function handler(req: any, res: any) {
 
     user.order_History_List = list;
 
-    res.status(201).json({
-      details: user,
-      error: null,
-      message: "Successfully fetched user personal information",
-    });
+    res.status(201).json(user);
   } catch (error) {
     res.status(422).json({
         details: null,
