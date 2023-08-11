@@ -47,23 +47,10 @@ async function handler(req: any, res: any) {
     user.user_Gender = userInfo.data()?.user_Gender;
     user.user_Mobile_Number = userInfo.data()?.user_Mobile_Number;
     user.user_Age = userInfo.data()?.user_Age;
-
-    user.user_Address.location_Id =
-      userInfo.data()?.user_Address["location_Id"];
-    user.user_Address.location_Name =
-      userInfo.data()?.user_Address["location_Name"];
-    user.user_Address.location_Address =
-      userInfo.data()?.user_Address["location_Address"];
-    user.user_Address.location_Country =
-      userInfo.data()?.user_Address["location_Country"];
-    user.user_Address.location_State =
-      userInfo.data()?.user_Address["location_State"];
-    user.user_Address.location_City =
-      userInfo.data()?.user_Address["location_City"];
-    user.user_Address.location_Pincode =
-      userInfo.data()?.user_Address["location_Pincode"];
-    user.user_Address.location_Landmark =
-      userInfo.data()?.user_Address["location_Landmark"];
+    user.user_Body_Type = userInfo.data()?.user_Body_Type;
+    user.user_Style_Tags_List = userInfo.data()?.user_Style_Tags_List;
+    user.user_Purchase_Brand_Name_Map = userInfo.data()?.user_Purchase_Brand_Name_Map;
+    user.user_Address = userInfo.data()?.user_Address;
 
     const orderHistoryCollectionRef = collection(
       db,
@@ -85,19 +72,11 @@ async function handler(req: any, res: any) {
       orderInfo.order_Price = order.data().order_Price;
       orderInfo.order_Date = new Date(order.data().order_Date);
       orderInfo.order_Delivery_Date = new Date(order.data().order_Delivery_Date);
+      orderInfo.order_Location = order.data()?.order_Location;
       orderInfo.order_Product_Details = await getProductDetails(
         order.data().product_Category,
         order.data().product_Id
       );
-
-      orderInfo.order_Location.location_Id = order.data()?.order_Location["location_Id"];
-      orderInfo.order_Location.location_Name = order.data()?.order_Location["location_Name"];
-      orderInfo.order_Location.location_Address = order.data()?.order_Location["location_Address"];
-      orderInfo.order_Location.location_Country = order.data()?.order_Location["location_Country"];
-      orderInfo.order_Location.location_State = order.data()?.order_Location["location_State"];
-      orderInfo.order_Location.location_City = order.data()?.order_Location["location_City"];
-      orderInfo.order_Location.location_Pincode = order.data()?.order_Location["location_Pincode"];
-      orderInfo.order_Location.location_Landmark = order.data()?.order_Location["location_Landmark"];
 
       list.push(orderInfo);
     }
