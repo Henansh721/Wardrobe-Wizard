@@ -2,15 +2,15 @@ import { LocationDetails } from "../location/locationDetail";
 import { ProductDetails } from "../product/productDetails";
 
 export class ProductOrderDetails {
-  orderId: string = "";
+  order_Id: string = "";
   productId: string = "";
-  orderProductDetails: ProductDetails = new ProductDetails();
-  orderQuantity: number = 1;
-  orderSize: number = 0;
-  orderPrice: number = 0;
-  orderLocation: LocationDetails = new LocationDetails();
-  orderDate: Date = new Date();
-  orderDeliveryDate: Date = new Date();
+  order_Product_Details: ProductDetails = new ProductDetails();
+  order_Quantity: number = 1;
+  order_Size: number = 0;
+  order_Price: number = 0;
+  order_Location: LocationDetails = new LocationDetails();
+  order_Date: Date = new Date();
+  order_Delivery_Date: Date = new Date();
 
   constructor() {}
 }
