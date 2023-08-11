@@ -13,9 +13,8 @@ export class UserDetails {
 
   //////////////////////////// GPT Generated ////////////////////////////
   user_Body_Type: string = "";
-  user_Style_Tags_List: any[] = [];
+  user_Style_Tags_List: string[] = [];
   user_Purchase_Brand_Name_Map: any = {};
-  user_Style_Preferences_List: string[] = [];
   
   constructor() {}
 }

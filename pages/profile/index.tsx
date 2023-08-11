@@ -9,11 +9,7 @@ export default function Profile() {
   return (
     <Fragment>
       <Head>
-        <title>{`Profile`}</title>
-        {/* <meta name="description" content={props.metaDescription} />
-        <link rel="icon" href={props.tabImageUrl} />
-        <meta property="og:image" content={props.metaImageUrl} />
-        <meta name="twitter:image" content={props.metaImageUrl} /> */}
+        <title>{`User Profile`}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`bg-blue-400`}>

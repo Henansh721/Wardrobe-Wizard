@@ -7,6 +7,7 @@ export class LocationDetails {
   location_City: string = "";
   location_Pincode: number = 0;
   location_Landmark: string = "";
+  location_Map_Url: string = "";
 
   constructor() {}
 }
