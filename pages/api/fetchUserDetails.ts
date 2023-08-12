@@ -50,7 +50,8 @@ async function handler(req: any, res: any) {
     user.user_Body_Type = userInfo.data()?.user_Body_Type;
     user.user_Body_Shape = userInfo.data()?.user_Body_Shape;
     user.user_Style_Tags_List = userInfo.data()?.user_Style_Tags_List;
-    user.user_Purchase_Brand_Name_Map = userInfo.data()?.user_Purchase_Brand_Name_Map;
+    user.user_Purchase_Brand_Name_Map =
+      userInfo.data()?.user_Purchase_Brand_Name_Map;
     user.user_Address = userInfo.data()?.user_Address;
 
     const orderHistoryCollectionRef = collection(
@@ -69,10 +70,12 @@ async function handler(req: any, res: any) {
       orderInfo.product_Id = order.data().product_Id;
       orderInfo.product_Category = order.data().product_Category;
       orderInfo.order_Quantity = order.data().order_Quantity;
-      orderInfo.order_Size = order.data().order_Size;
+      orderInfo.product_Dimensions = order.data().product_Dimensions;
       orderInfo.order_Price = order.data().order_Price;
       orderInfo.order_Date = new Date(order.data().order_Date);
-      orderInfo.order_Delivery_Date = new Date(order.data().order_Delivery_Date);
+      orderInfo.order_Delivery_Date = new Date(
+        order.data().order_Delivery_Date
+      );
       orderInfo.order_Location = order.data()?.order_Location;
       orderInfo.order_Product_Details = await getProductDetails(
         order.data().product_Category,
@@ -84,13 +87,44 @@ async function handler(req: any, res: any) {
 
     user.order_History_List = list;
 
-    res.status(201).json(user);
+    let orderList = [];
+    for (let val of user.order_History_List) {
+      let od = {
+        product_Name: val.order_Product_Details.product_Name,
+        product_Description: val.order_Product_Details.product_Description,
+        product_Brand_Name: val.order_Product_Details.product_Brand_Name,
+        product_Category: val.order_Product_Details.product_Category,
+        product_Subcategory: val.order_Product_Details.product_Subcategory,
+        product_Tags_List: val.order_Product_Details.product_Tags_List,
+        product_Dimensions: val.product_Dimensions,
+      }
+
+      orderList.push(od);
+    }
+
+    let obj = {
+      user_Name: user.user_Name,
+      user_Email_Id: user.user_Email_Id,
+      user_Gender: user.user_Gender,
+      user_Age: user.user_Age,
+      user_Mobile_Number: user.user_Mobile_Number,
+      user_Address: {
+        location_State: user.user_Address.location_State,
+        location_City: user.user_Address.location_City,
+      },
+      user_Body_Type: user.user_Body_Type,
+      user_Style_Tags_List: user.user_Style_Tags_List,
+      user_Purchase_Brand_Name_Map: user.user_Purchase_Brand_Name_Map,
+      order_History_List: orderList,
+    };
+
+    res.status(201).json(obj);
   } catch (error) {
     res.status(422).json({
-        details: null,
-        error: error,
-        message: "Unsuccessful in fetching user personal details",
-      });
+      details: null,
+      error: error,
+      message: "Unsuccessful in fetching user personal details",
+    });
   }
 }
 

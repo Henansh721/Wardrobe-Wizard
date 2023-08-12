@@ -19,10 +19,10 @@ export class UserDetails {
     user_Physique: "",
   };
   user_Body_Shape: any = {
-    "user_upper_Dimension": 0,
-    "user_middle_Dimension": 0,
-    "user_lower_Dimension": 0,
-    "measure_scale": "",
+    user_upper_Dimension: 0,
+    user_middle_Dimension: 0,
+    user_lower_Dimension: 0,
+    measure_scale: "",
   };
   user_Style_Tags_List: string[] = [];
   user_Purchase_Brand_Name_Map: any = {};
