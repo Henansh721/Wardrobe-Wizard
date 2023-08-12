@@ -17,13 +17,13 @@ import {
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  const { trendsMapping } = req.query;
+  const { userId, trendsMapping } = req.query;
 
   const trendsMap = JSON.parse(decodeURIComponent(trendsMapping));
 
   try {
-    const docRef = doc(db, TRENDS_COLLECTION_NAME, FASHION_TRENDS_KEY);
-    const response = await setDoc(docRef, {
+    const docRef = doc(db, USER_COLLECTION_NAME, userId);
+    const response = await updateDoc(docRef, {
       socail_Media_Trends_Map: trendsMap,
     });
 
