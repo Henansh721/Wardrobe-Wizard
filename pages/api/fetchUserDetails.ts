@@ -48,6 +48,7 @@ async function handler(req: any, res: any) {
     user.user_Mobile_Number = userInfo.data()?.user_Mobile_Number;
     user.user_Age = userInfo.data()?.user_Age;
     user.user_Body_Type = userInfo.data()?.user_Body_Type;
+    user.user_Body_Shape = userInfo.data()?.user_Body_Shape;
     user.user_Style_Tags_List = userInfo.data()?.user_Style_Tags_List;
     user.user_Purchase_Brand_Name_Map = userInfo.data()?.user_Purchase_Brand_Name_Map;
     user.user_Address = userInfo.data()?.user_Address;

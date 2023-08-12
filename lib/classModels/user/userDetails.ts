@@ -12,9 +12,20 @@ export class UserDetails {
   order_History_List: ProductOrderDetails[] = [];
 
   //////////////////////////// GPT Generated ////////////////////////////
-  user_Body_Type: string = "";
+  user_Body_Type: any = {
+    user_Shape: "",
+    user_Proportions: "",
+    user_Compositions: "",
+    user_Physique: "",
+  };
+  user_Body_Shape: any = {
+    "user_upper_Dimension": 0,
+    "user_middle_Dimension": 0,
+    "user_lower_Dimension": 0,
+    "measure_scale": "",
+  };
   user_Style_Tags_List: string[] = [];
   user_Purchase_Brand_Name_Map: any = {};
-  
+
   constructor() {}
 }
