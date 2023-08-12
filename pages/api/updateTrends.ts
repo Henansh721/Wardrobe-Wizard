@@ -16,29 +16,18 @@ async function handler(req: any, res: any) {
   const receivedData = req.body;
   const {
     userId,
-    user_Body_Type,
-    user_Style_Tags_List,
-    user_Purchase_Brand_Name_Map,
-    user_Style_Colors_Map,
+    trendsMapping,
   } = req.query;
 
-  const bodyType = JSON.parse(decodeURIComponent(user_Body_Type));
-  const styleTagList = JSON.parse(decodeURIComponent(user_Style_Tags_List));
-  const purchaseBrandMap = JSON.parse(
-    decodeURIComponent(user_Purchase_Brand_Name_Map)
-  );
-  const purchaseColorMap = JSON.parse(
-    decodeURIComponent(user_Style_Colors_Map)
-  );
+  const trendsMap = JSON.parse(decodeURIComponent(trendsMapping));
 
   try {
     const docRef = doc(db, USER_COLLECTION_NAME, userId);
-    const response = await updateDoc(docRef, {
-      user_Body_Type: bodyType,
-      user_Style_Tags_List: styleTagList,
-      user_Purchase_Brand_Name_Map: purchaseBrandMap,
-      user_Style_Colors_Map: purchaseColorMap,
-    });
+    // const response = await updateDoc(docRef, {
+    //   user_Body_Type: bodyType,
+    //   user_Style_Tags_List: styleTagList,
+    //   user_Purchase_Brand_Name_Map: purchaseBrandMap,
+    // });
 
     const userInfo = await getDoc(docRef);
     res.status(201).json(userInfo.data());

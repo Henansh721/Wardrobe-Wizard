@@ -19,16 +19,12 @@ async function handler(req: any, res: any) {
     user_Body_Type,
     user_Style_Tags_List,
     user_Purchase_Brand_Name_Map,
-    user_Style_Colors_Map,
   } = req.query;
 
   const bodyType = JSON.parse(decodeURIComponent(user_Body_Type));
   const styleTagList = JSON.parse(decodeURIComponent(user_Style_Tags_List));
   const purchaseBrandMap = JSON.parse(
     decodeURIComponent(user_Purchase_Brand_Name_Map)
-  );
-  const purchaseColorMap = JSON.parse(
-    decodeURIComponent(user_Style_Colors_Map)
   );
 
   try {
@@ -37,7 +33,6 @@ async function handler(req: any, res: any) {
       user_Body_Type: bodyType,
       user_Style_Tags_List: styleTagList,
       user_Purchase_Brand_Name_Map: purchaseBrandMap,
-      user_Style_Colors_Map: purchaseColorMap,
     });
 
     const userInfo = await getDoc(docRef);

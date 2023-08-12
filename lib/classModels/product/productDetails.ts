@@ -1,6 +1,7 @@
 export class ProductDetails {
   product_Id: string = "";
   product_Name: string = "";
+  product_Color: string = "white";
   product_Description: string = "";
   product_Brand_Name: string = "";
   product_Category: string = "";

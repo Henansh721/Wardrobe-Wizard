@@ -19,6 +19,7 @@ export const getProductDetails = async (
   let product = new ProductDetails();
   product.product_Id = productInfo.data()?.product_Id;
   product.product_Name = productInfo.data()?.product_Name;
+  product.product_Color = productInfo.data()?.product_Color;
   product.product_Description = productInfo.data()?.product_Description;
   product.product_Brand_Name = productInfo.data()?.product_Brand_Name;
   product.product_Category = productInfo.data()?.product_Category;
@@ -52,6 +53,7 @@ async function handler(req: any, res: any) {
     user.user_Style_Tags_List = userInfo.data()?.user_Style_Tags_List;
     user.user_Purchase_Brand_Name_Map = userInfo.data()?.user_Purchase_Brand_Name_Map;
     user.user_Address = userInfo.data()?.user_Address;
+    user.user_Style_Colors_List = userInfo.data()?.user_Style_Colors_List;
 
     const orderHistoryCollectionRef = collection(
       db,
@@ -90,6 +92,7 @@ async function handler(req: any, res: any) {
     for (let val of user.order_History_List) {
       let od = {
         product_Name: val.order_Product_Details.product_Name,
+        product_Color: val.order_Product_Details.product_Color,
         product_Description: val.order_Product_Details.product_Description,
         product_Brand_Name: val.order_Product_Details.product_Brand_Name,
         product_Category: val.order_Product_Details.product_Category,
@@ -113,6 +116,7 @@ async function handler(req: any, res: any) {
       },
       user_Body_Type: user.user_Body_Type,
       user_Style_Tags_List: user.user_Style_Tags_List,
+      user_Style_Colors_List: user.user_Style_Colors_List,
       user_Purchase_Brand_Name_Map: user.user_Purchase_Brand_Name_Map,
       order_History_List: orderList,
     };

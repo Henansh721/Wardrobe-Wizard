@@ -28,11 +28,11 @@ export default function AddProduct() {
   const router = useRouter();
   const [productName, setProductName] = useState<string>("");
   const [productGender, setProductGender] = useState<string>("MALE");
+  const [productColor, setProductColor] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
   const [productBrandName, setProductBrandName] = useState<string>("");
   const [productCategoryName, setProductCategoryName] = useState<string>("");
-  const [productSubcategoryName, setProductSubcategoryName] =
-    useState<string>("");
+  const [productSubcategoryName, setProductSubcategoryName] = useState<string>("");
   const [productTagList, setProductTagList] = useState<string[]>([]);
   const [productPrice, setProductPrice] = useState<number>(0);
 
@@ -50,7 +50,7 @@ export default function AddProduct() {
     "TOPWEAR": ["TSHIRTS", "FORMAL-SHIRTS", "CASUAL-SHIRTS"],
     "BOTTOMWEAR": ["JEANS-SHIRTS", "FORMAL-TROUSERS", "CASUAL-TROUSERS", "TRACK-PANTS-TROUSERS", "SHORTS-TROUSERS", "THREE-FOURTH-TROUSERS"],
     "FOOTWEAR": ["SPORTS-SHOES", "CASUAL-SHOES", "FORMAL-SHOES", "SANDLES-AND-FLOATERS", "FLIP-FLOPS", "LOAFERS", "BOOTS", "RUNNING-SHOES", "SNEAKERS", "FLATS", "HEELS", "WEDGES"],
-    "WATCHES": ["SPORTS-WATCHES"],
+    "WATCHES": ["SPORTS-WATCHES", "ANALOG-WATCHES", "DIGITAL-WATCHES"],
     "BAGS": ["BAGPACKS", "WALLETS", "SUITCASES", "HAND-BAGS", "SHOULDER-BAGS", "SLING-BAGS", "CLUTHES"],
     "WINTERWEAR": ["SWEATSHIRTS", "JACKETS", "SWEATERS", "BLAZERS"],
     'ETHNICWEAR': ["KURTA", "SHERWANI", "DHOTI", "LUNGI", "SARI", "LEHENGA", "GOWN"],
@@ -60,6 +60,7 @@ export default function AddProduct() {
     let prd = new ProductDetails();
     prd.product_Name = productName;
     prd.product_Gender = productGender;
+    prd.product_Color = productColor;
     prd.product_Description = productDescription;
     prd.product_Brand_Name = productBrandName;
     prd.product_Category = productCategoryName;
@@ -77,7 +78,6 @@ export default function AddProduct() {
       setProductSubcategoryName("");
       setProductTagList([]);
       setProductPrice(0);
-
     }
     console.log(res);
   };
@@ -104,6 +104,14 @@ export default function AddProduct() {
             setter={setProductName}
           />
           <InfoTile
+            headerText={"Product Color"}
+            tileText={productColor}
+            descriptionText={""}
+            placeHolderText={"Enter the color of the product"}
+            inputType={"name"}
+            setter={setProductColor}
+          />
+          <InfoTile
             headerText={"Product description"}
             tileText={productDescription}
             descriptionText={""}
@@ -120,7 +128,7 @@ export default function AddProduct() {
             setter={setProductBrandName}
           />
           <DropDownTile
-            header={`Select product gender type`}
+            header={`Select product for MALE/FEMALE`}
             optionList={["MALE", "FEMALE"]}
             setter={setProductGender}
           />

@@ -25,6 +25,7 @@ async function handler(req: any, res: any) {
     const response = await addDoc(docRef, {
       product_Id: "",
       product_Name: productDetails.product_Name,
+      product_Color: productDetails.product_Color,
       product_Gender: productDetails.product_Gender,
       product_Description: productDetails.product_Description,
       product_Brand_Name: productDetails.product_Brand_Name,

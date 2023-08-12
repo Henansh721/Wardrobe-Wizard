@@ -25,6 +25,7 @@ export class UserDetails {
     measure_scale: "",
   };
   user_Style_Tags_List: string[] = [];
+  user_Style_Colors_List: string[] = [];
   user_Purchase_Brand_Name_Map: any = {};
 
   constructor() {}
