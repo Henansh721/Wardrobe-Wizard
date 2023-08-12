@@ -29,6 +29,7 @@ export default function AddProduct() {
   const [productName, setProductName] = useState<string>("");
   const [productGender, setProductGender] = useState<string>("MALE");
   const [productColor, setProductColor] = useState<string>("");
+  const [productImageUrl, setProductImageUrl] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
   const [productBrandName, setProductBrandName] = useState<string>("");
   const [productCategoryName, setProductCategoryName] = useState<string>("");
@@ -61,6 +62,7 @@ export default function AddProduct() {
     prd.product_Name = productName;
     prd.product_Gender = productGender;
     prd.product_Color = productColor;
+    prd.product_Image_Url = productImageUrl;
     prd.product_Description = productDescription;
     prd.product_Brand_Name = productBrandName;
     prd.product_Category = productCategoryName;
@@ -72,6 +74,7 @@ export default function AddProduct() {
     if (res.details) {
       setProductName("");
       setProductDescription("");
+      setProductImageUrl("");
       setProductGender("");
       setProductBrandName("");
       setProductCategoryName("");
@@ -118,6 +121,14 @@ export default function AddProduct() {
             placeHolderText={"Enter the description of the product"}
             inputType={"name"}
             setter={setProductDescription}
+          />
+          <InfoTile
+            headerText={"Product Firebase Image Url"}
+            tileText={productImageUrl}
+            descriptionText={""}
+            placeHolderText={"Enter the firebase Image url of the product"}
+            inputType={"name"}
+            setter={setProductImageUrl}
           />
           <InfoTile
             headerText={"Product Brand"}
