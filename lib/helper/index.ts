@@ -13,6 +13,8 @@ export const BAGS_COLLECTION_NAME = "BAGS";
 export const WINTERWEAR_COLLECTION_NAME = "WINTERWEAR";
 export const ETHNICWEAR_COLLECTION_NAME = "ETHNICWEAR";
 
+// Trending Fashion Trends Collection Names
+
 // Product Sub-category Collection Names
 export const TOPWEAR_TSHIRTS_COLLECTION_NAME = "TSHIRTS";
 export const TOPWEAR_FORMAL_SHIRTS_COLLECTION_NAME = "FORMAL-SHIRTS";

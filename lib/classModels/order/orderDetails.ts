@@ -10,6 +10,7 @@ export class ProductOrderDetails {
     bust: 0,
     waist: 0,
     chest: 0,
+    metric: "inches",
   };
   order_Price: number = 0;
   order_Date: Date = new Date();
