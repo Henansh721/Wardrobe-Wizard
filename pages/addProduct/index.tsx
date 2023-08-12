@@ -48,7 +48,7 @@ export default function AddProduct() {
   const [subCategoryMap, setSubcategoryMap] = useState<any>({
     "": [],
     "TOPWEAR": ["TSHIRTS", "FORMAL-SHIRTS", "CASUAL-SHIRTS"],
-    "BOTTOMWEAR": ["JEANS-SHIRTS", "FORMAL-TROUSERS", "CASUAL-TROUSERS", "TRACK-PANTS-TROUSERS", "SHORTS-TROUSERS", "THREE-FOURTH-TROUSERS"],
+    "BOTTOMWEAR": ["JEANS", "FORMAL-TROUSERS", "CASUAL-TROUSERS", "TRACK-PANTS-TROUSERS", "SHORTS-TROUSERS", "THREE-FOURTH-TROUSERS"],
     "FOOTWEAR": ["SPORTS-SHOES", "CASUAL-SHOES", "FORMAL-SHOES", "SANDLES-AND-FLOATERS", "FLIP-FLOPS", "LOAFERS", "BOOTS", "RUNNING-SHOES", "SNEAKERS", "FLATS", "HEELS", "WEDGES"],
     "WATCHES": ["SPORTS-WATCHES", "ANALOG-WATCHES", "DIGITAL-WATCHES"],
     "BAGS": ["BAGPACKS", "WALLETS", "SUITCASES", "HAND-BAGS", "SHOULDER-BAGS", "SLING-BAGS", "CLUTHES"],
@@ -129,7 +129,7 @@ export default function AddProduct() {
           />
           <DropDownTile
             header={`Select product for MALE/FEMALE`}
-            optionList={["MALE", "FEMALE"]}
+            optionList={["MALE", "FEMALE", "UNIVERSAL"]}
             setter={setProductGender}
           />
           <DropDownTile
