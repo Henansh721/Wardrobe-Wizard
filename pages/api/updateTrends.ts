@@ -1,5 +1,7 @@
 import { auth, db } from "@/lib/firebase";
 import {
+  FASHION_TRENDS_KEY,
+  TRENDS_COLLECTION_NAME,
   USER_COLLECTION_NAME,
   USER_ORDERS_COLLECTION_NAME,
 } from "@/lib/helper";
@@ -10,27 +12,22 @@ import {
   getDocs,
   collection,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  const {
-    userId,
-    trendsMapping,
-  } = req.query;
+  const { trendsMapping } = req.query;
 
   const trendsMap = JSON.parse(decodeURIComponent(trendsMapping));
 
   try {
-    const docRef = doc(db, USER_COLLECTION_NAME, userId);
-    // const response = await updateDoc(docRef, {
-    //   user_Body_Type: bodyType,
-    //   user_Style_Tags_List: styleTagList,
-    //   user_Purchase_Brand_Name_Map: purchaseBrandMap,
-    // });
+    const docRef = doc(db, TRENDS_COLLECTION_NAME, FASHION_TRENDS_KEY);
+    const response = await setDoc(docRef, {
+      socail_Media_Trends_Map: trendsMap,
+    });
 
-    const userInfo = await getDoc(docRef);
-    res.status(201).json(userInfo.data());
+    res.status(201).json(response);
   } catch (error) {
     res.status(422).json({
       details: null,

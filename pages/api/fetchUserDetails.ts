@@ -53,7 +53,7 @@ async function handler(req: any, res: any) {
     user.user_Style_Tags_List = userInfo.data()?.user_Style_Tags_List;
     user.user_Purchase_Brand_Name_Map = userInfo.data()?.user_Purchase_Brand_Name_Map;
     user.user_Address = userInfo.data()?.user_Address;
-    user.user_Style_Colors_List = userInfo.data()?.user_Style_Colors_List;
+    user.user_Style_Colors_Map = userInfo.data()?.user_Style_Colors_Map;
 
     const orderHistoryCollectionRef = collection(
       db,
@@ -116,8 +116,8 @@ async function handler(req: any, res: any) {
       },
       user_Body_Type: user.user_Body_Type,
       user_Style_Tags_List: user.user_Style_Tags_List,
-      user_Style_Colors_List: user.user_Style_Colors_List,
       user_Purchase_Brand_Name_Map: user.user_Purchase_Brand_Name_Map,
+      user_Style_Colors_Map: user.user_Style_Colors_Map,
       order_History_List: orderList,
     };
 
