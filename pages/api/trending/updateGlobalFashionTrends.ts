@@ -17,7 +17,7 @@ import {
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  const { userId, trendsMapping } = req.query;
+  const { trendsMapping } = req.query;
 
   const trendsMap = JSON.parse(decodeURIComponent(trendsMapping));
 

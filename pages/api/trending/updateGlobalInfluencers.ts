@@ -18,7 +18,7 @@ import {
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  const { userId, influencersMapping } = req.query;
+  const { influencersMapping } = req.query;
 
   const influencersMap = JSON.parse(decodeURIComponent(influencersMapping));
 
