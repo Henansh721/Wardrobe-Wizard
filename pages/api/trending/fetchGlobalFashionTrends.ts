@@ -1,18 +1,13 @@
-import { ProductOrderDetails } from "@/lib/classModels/order/orderDetails";
-import { UserDetails } from "@/lib/classModels/user/userDetails";
 import { db } from "@/lib/firebase";
-import { getProductDetails } from "@/lib/firebase/functionHandler";
 import {
   FASHION_TRENDS_KEY,
   TRENDS_COLLECTION_NAME,
-  USER_COLLECTION_NAME,
-  USER_ORDERS_COLLECTION_NAME,
 } from "@/lib/helper";
 
 import { doc, getDoc } from "firebase/firestore";
 
 async function handler(req: any, res: any) {
-  const receivedData = req.body;
+  //   const receivedData = req.body;
   //   const { userId } = req.query;
 
   try {

@@ -9,32 +9,24 @@ import {
 
 import {
   doc,
-  getDoc,
-  getDocs,
-  collection,
-  updateDoc,
   setDoc,
 } from "firebase/firestore";
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  //   const { influencersMapping } = req.query;
-//   const { influencersMapping } = receivedData;
-
-  const influencersMap = JSON.parse(decodeURIComponent(receivedData));
 
   try {
     const docRef = doc(db, TRENDS_COLLECTION_NAME, TRENDING_INFLUENCERS_KEY);
-    const response = await updateDoc(docRef, {
-      trending_Influencers_Map: influencersMap,
+    const response = await setDoc(docRef, {
+      trending_Influencers_Map: receivedData,
     });
 
-    res.status(201).json(response);
+    res.status(201).json(receivedData);
   } catch (error) {
     res.status(422).json({
       details: null,
       error: error,
-      message: "Unsuccessful in updating user personal details",
+      message: "Unsuccessful in updating trending influencers",
     });
   }
 }

@@ -17,22 +17,19 @@ import {
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  // const { trendsMapping } = req.query;
-
-  const trendsMap = JSON.parse(decodeURIComponent(receivedData));
 
   try {
     const docRef = doc(db, TRENDS_COLLECTION_NAME, FASHION_TRENDS_KEY);
-    const response = await updateDoc(docRef, {
-      socail_Media_Trends_Map: trendsMap,
+    const response = await setDoc(docRef, {
+      socail_Media_Trends_Map: receivedData,
     });
 
-    res.status(201).json(response);
+    res.status(201).json(receivedData);
   } catch (error) {
     res.status(422).json({
       details: null,
       error: error,
-      message: "Unsuccessful in updating user personal details",
+      message: "Unsuccessful in updating global fashion trends",
     });
   }
 }

@@ -8,6 +8,23 @@ import { ProductDetails } from "@/lib/classModels/product/productDetails";
 import ListTag from "@/components/ListTag";
 import { useRouter } from "next/router";
 
+export const updateAPI = async (
+) => {
+  const response = await fetch("/api/trending/updateGlobalFashionTrends", {
+    method: "POST",
+    body: JSON.stringify({
+      "key": 2
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
 export const addProductDetailsHandler = async (
   productDetails: ProductDetails
 ) => {
@@ -97,6 +114,7 @@ export default function AddProduct() {
         >
           Add New Product
         </h2>
+        <button onClick={updateAPI}>Post</button>
         <div className={`relative w-full flex flex-col space-y-2`}>
           <InfoTile
             headerText={"Product name"}
