@@ -23,6 +23,9 @@ export default function ChatBox(props: Props) {
   };
   const conversationClearHandler = () => {
     setIsConversationOn(false);
+    setGlobalChatList([]);
+    setUserChatList([]);
+    setGptChatList([]);
   };
 
   const messageSubmitHandler = (event: any) => {
@@ -43,7 +46,7 @@ export default function ChatBox(props: Props) {
         initial={{ opacity: 0.0, x: 50 }}
         transition={{ duration: 2.0, type: "spring" }}
         whileInView={{ opacity: 1, x: 0 }}
-        className={`relative flex flex-col right-0 h-screen w-full md:w-[60%] lg:w-[50%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
+        className={`relative flex flex-col right-0 h-screen w-full lg:w-[50%] xl:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
       >
         <div
           className={`relative top-0 w-full h-[7%] px-1 py-2 bg-[#27293e] rounded-tl-xl z-30`}
@@ -122,32 +125,54 @@ export default function ChatBox(props: Props) {
         </div>
 
         <div
-          className={`relative flex flex-col-reverse py-2 w-[90%] h-full overflow-y-scroll space-y-2 z-10 mx-auto `}
+          className={`relative flex flex-col-reverse my-1 w-full px-4 h-full overflow-y-scroll z-10 mx-auto `}
         >
           {globalChatList.map((chat: string, index: number) => {
             if (index % 2 == 0) {
               return (
                 <div
                   key={index}
-                  className={`relative flex flex-row-reverse w-full `}
+                  className="relative flex flex-row-reverse w-full mt-2"
                 >
                   <div
-                    className={`relative flex max-w-[80%] rounded-l-full rounded-br-full overflow-ellipsis py-2 px-5 bg-blue-700 text-white`}
+                    className={`absolute bg-[#27293e] h-7 w-7 rounded-full top-0 -mt-3 -mr-2 right-0 z-40`}
                   >
-                    {globalChatList[globalChatList.length - index - 1]}
+                    <Image
+                      alt="img"
+                      className={`rounded-full`}
+                      src={"/user-icon.png"}
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
+                  <div className="relative flex flex-col max-w-[85%]">
+                    <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
+                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                        {globalChatList[globalChatList.length - index - 1]}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
             } else {
               return (
-                <div
-                  key={index}
-                  className={`relative flex flex-row w-full `}
-                >
+                <div key={index} className="relative flex flex-row w-full mt-2">
                   <div
-                    className={`relative flex max-w-[80%] rounded-r-full rounded-bl-full overflow-ellipsis py-2 px-5 bg-[#27293e] text-white`}
+                    className={`absolute bg-blue-700 h-7 w-7 rounded-full p-2 top-0 -mt-3 -ml-2 left-0 z-40`}
                   >
-                    {globalChatList[globalChatList.length - index - 1]}
+                    <Image
+                      alt="img"
+                      src={"/wizzard.png"}
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
+                  <div className="relative flex flex-col max-w-[85%]">
+                    <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
+                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                        {globalChatList[globalChatList.length - index - 1]}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -158,7 +183,20 @@ export default function ChatBox(props: Props) {
         <div
           className={`relative flex flex-col bottom-0 w-full h-[10%] pb-4 pt-1 z-30`}
         >
-          <div className={`relative flex w-full`}></div>
+          {/* <div
+            className={`absolute flex w-fit left-1 justify-center align-middle items-center text-center space-x-1 mx-auto top-0 -mt-7 z-40 bg-gray-400 p-1 rounded-full`}
+          >
+            <div className={`relative bg-blue-700 h-4 w-4 rounded-full p-1`}>
+              <Image
+                className={`rounded-full`}
+                alt="img"
+                src={"/loading-animation.gif"}
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+            <p className={`font-mono text-xs`}>responding</p>
+          </div> */}
           <form
             onSubmit={messageSubmitHandler}
             className={`relative flex w-full md:w-[92.5%] mx-auto align-middle items-center space-x-2`}

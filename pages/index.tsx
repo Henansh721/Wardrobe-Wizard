@@ -25,7 +25,7 @@ export default function Home() {
       </main>
       {!showChatBox && (
         <div
-          className={`absolute bg-[#27293e] h-16 w-16 rounded-full p-3 right-5 bottom-5 z-10 cursor-pointer shadow-2xl`}
+          className={`absolute bg-[#27293e] hover:bg-blue-700 h-16 w-16 rounded-full p-3 right-5 bottom-5 z-10 cursor-pointer shadow-2xl`}
         >
           <Image
             onClick={() => {
