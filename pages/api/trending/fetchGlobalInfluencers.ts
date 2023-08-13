@@ -14,14 +14,12 @@ import { doc, getDoc, getDocs, collection } from "firebase/firestore";
 
 async function handler(req: any, res: any) {
   const receivedData = req.body;
-  //   const { userId } = req.query;
 
   try {
     const docRef = doc(db, TRENDS_COLLECTION_NAME, TRENDING_INFLUENCERS_KEY);
     const trendsInfo = await getDoc(docRef);
 
-    let map = trendsInfo.data()?.socail_Media_Trends_Map;
-
+    let map = trendsInfo.data()?.trending_Influencers_Map;
     res.status(201).json(map);
   } catch (error) {
     res.status(422).json({

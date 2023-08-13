@@ -13,7 +13,7 @@ async function handler(req: any, res: any) {
   try {
     const docRef = doc(db, TRENDS_COLLECTION_NAME, FASHION_TRENDS_KEY);
     const trendsInfo = await getDoc(docRef);
-    let map = trendsInfo.data()?.trending_Influencers_Map;
+    let map = trendsInfo.data()?.socail_Media_Trends_Map;
     res.status(201).json(map);
   } catch (error) {
     res.status(422).json({

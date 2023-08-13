@@ -114,7 +114,7 @@ export default function AddProduct() {
         >
           Add New Product
         </h2>
-        <button onClick={updateAPI}>Post</button>
+        {/* <button onClick={updateAPI}>Post</button> */}
         <div className={`relative w-full flex flex-col space-y-2`}>
           <InfoTile
             headerText={"Product name"}
