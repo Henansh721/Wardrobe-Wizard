@@ -68,7 +68,7 @@ export default function ChatBox(props: Props) {
         <div
           className={`absolute my-auto justify-center align-middle items-center w-full h-full flex flex-col ${
             isConversationOn ? "z-0" : "z-20"
-          } ${isConversationOn ? "opacity-10" : "opacity-100"}`}
+          } ${isConversationOn ? "opacity-0" : "opacity-100"}`}
         >
           <Image
             onClick={conversationClearHandler}
@@ -125,49 +125,49 @@ export default function ChatBox(props: Props) {
         </div>
 
         <div
-          className={`relative flex flex-col-reverse my-1 w-full px-4 h-full overflow-y-scroll z-10 mx-auto `}
+          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-full overflow-y-scroll z-10 mx-auto`}
         >
           {globalChatList.map((chat: string, index: number) => {
             if (index % 2 == 0) {
               return (
                 <div
                   key={index}
-                  className="relative flex flex-row-reverse w-full mt-2"
+                  className="relative flex flex-row-reverse w-full mt-3"
                 >
-                  <div
-                    className={`absolute bg-[#27293e] h-7 w-7 rounded-full top-0 -mt-3 -mr-2 right-0 z-40`}
-                  >
-                    <Image
-                      alt="img"
-                      className={`rounded-full`}
-                      src={"/user-icon.png"}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
-                  <div className="relative flex flex-col max-w-[85%]">
+                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
                     <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
                       <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
                         {globalChatList[globalChatList.length - index - 1]}
                       </div>
                     </div>
+                    {/* <div
+                      className={`relative bg-[#27293e] h-5 w-5 p-3 rounded-full top-0 right-0`}
+                    >
+                      <Image
+                        alt="img"
+                        className={`rounded-full`}
+                        src={"/user-icon.png"}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </div> */}
                   </div>
                 </div>
               );
             } else {
               return (
-                <div key={index} className="relative flex flex-row w-full mt-2">
-                  <div
-                    className={`absolute bg-blue-700 h-7 w-7 rounded-full p-2 top-0 -mt-3 -ml-2 left-0 z-40`}
-                  >
-                    <Image
-                      alt="img"
-                      src={"/wizzard.png"}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
-                  <div className="relative flex flex-col max-w-[85%]">
+                <div key={index} className="relative flex flex-row w-full mt-3">
+                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                    <div
+                      className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
+                    >
+                      <Image
+                        alt="img"
+                        src={"/wizzard.png"}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </div>
                     <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
                       <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
                         {globalChatList[globalChatList.length - index - 1]}
@@ -184,13 +184,13 @@ export default function ChatBox(props: Props) {
           className={`relative flex flex-col bottom-0 w-full h-[10%] pb-4 pt-1 z-30`}
         >
           {/* <div
-            className={`absolute flex w-fit left-1 justify-center align-middle items-center text-center space-x-1 mx-auto top-0 -mt-7 z-40 bg-gray-400 p-1 rounded-full`}
+            className={`absolute flex w-fit left-10 justify-center align-middle items-center text-center space-x-1 mx-auto top-0 -mt-10 z-40 p-1 rounded-full`}
           >
-            <div className={`relative bg-blue-700 h-4 w-4 rounded-full p-1`}>
+            <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
               <Image
                 className={`rounded-full`}
                 alt="img"
-                src={"/loading-animation.gif"}
+                src={"/circles-menu.gif"}
                 layout="fill"
                 objectFit="cover"
               />
