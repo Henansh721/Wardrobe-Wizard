@@ -18,9 +18,8 @@ import {
 async function handler(req: any, res: any) {
   const receivedData = req.body;
   // const { trendsMapping } = req.query;
-  const { trendsMapping } = receivedData;
 
-  const trendsMap = JSON.parse(decodeURIComponent(trendsMapping));
+  const trendsMap = JSON.parse(decodeURIComponent(receivedData));
 
   try {
     const docRef = doc(db, TRENDS_COLLECTION_NAME, FASHION_TRENDS_KEY);

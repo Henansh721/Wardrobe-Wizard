@@ -19,9 +19,9 @@ import {
 async function handler(req: any, res: any) {
   const receivedData = req.body;
   //   const { influencersMapping } = req.query;
-  const { influencersMapping } = receivedData;
+//   const { influencersMapping } = receivedData;
 
-  const influencersMap = JSON.parse(decodeURIComponent(influencersMapping));
+  const influencersMap = JSON.parse(decodeURIComponent(receivedData));
 
   try {
     const docRef = doc(db, TRENDS_COLLECTION_NAME, TRENDING_INFLUENCERS_KEY);
