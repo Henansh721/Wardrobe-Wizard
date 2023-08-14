@@ -18,8 +18,8 @@ async function handler(req: any, res: any) {
     let map2 = influencersInfo.data()?.trending_Influencers_Map;
 
     res.status(201).json({
-      trends: map1,
-      influencers: map2,
+      SOCIAL_TRENDS: map1,
+      INFLUENCER_TRENDS: map2,
     });
   } catch (error) {
     res.status(422).json({
