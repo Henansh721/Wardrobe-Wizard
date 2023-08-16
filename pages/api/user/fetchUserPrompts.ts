@@ -4,8 +4,8 @@ import { USER_COLLECTION_NAME } from "@/lib/helper";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 async function handler(req: any, res: any) {
-  const { userId } = req.body;
-  //   const { userId } = req.query;
+  // const { userId } = req.body;
+    const { userId } = req.query;
 
   try {
     const docRef = doc(db, USER_COLLECTION_NAME, userId);
