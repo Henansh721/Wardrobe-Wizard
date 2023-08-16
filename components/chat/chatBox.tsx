@@ -27,6 +27,8 @@ export const userPromptApiHandler = async (prompt: any) => {
 type Props = {
   showChatBox: boolean;
   setShowChatBox: Function;
+  setDisplayImgUrl: Function;
+  setFlipkartUrl: Function;
 };
 
 export default function ChatBox(props: Props) {
@@ -182,18 +184,19 @@ export default function ChatBox(props: Props) {
                   key={index}
                   className="relative flex flex-row-reverse w-full mt-3"
                 >
-                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                    <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
-                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                        {prompt.displayMsg}
-                      </div>
+                  <div className="relative flex flex-row max-w-[85%]">
+                    <div className="rounded-l-full rounded-br-full overflow-y-scroll bg-blue-700 text-white overflow-auto break-all py-2 px-5">
+                      {prompt.displayMsg}
                     </div>
                   </div>
                 </div>
               );
             } else if (prompt.type === "assistant") {
               return (
-                <div key={index} className="relative flex flex-row w-full mt-3">
+                <div
+                  key={index}
+                  className="relative flex flex-col space-y-1 w-full mt-3"
+                >
                   <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
                     <div
                       className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
@@ -205,12 +208,42 @@ export default function ChatBox(props: Props) {
                         objectFit="cover"
                       />
                     </div>
-                    <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
-                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                        {prompt.displayMsg}
-                      </div>
+                    <div className="rounded-r-full rounded-bl-full bg-[#27293e] text-white overflow-hidden break-all py-2 px-5">
+                      {prompt.displayMsg}
                     </div>
                   </div>
+                  {prompt.responseList.length > 0 && (
+                    <div
+                      className={`relative flex flex-col p-1 rounded-lg bg-gray-200 mx-auto w-full`}
+                    >
+                      <div
+                        className={`relative w-full flex flex-row overflow-x-scroll p-1 space-y-1`}
+                      >
+                        {prompt.responseList.map(
+                          (fashionObj: any, index: number) => (
+                            <div
+                              key={index}
+                              className={`relative flex flex-col cursor-pointer`}
+                              onClick={() => {
+                                props.setDisplayImgUrl(fashionObj.imageUrl);
+                                props.setFlipkartUrl(fashionObj.flipkartUrl);
+                              }}
+                            >
+                              <div className={`realtive w-36 h-44 rounded-lg`}>
+                                <Image
+                                  alt="img"
+                                  className={`rounded-lg p-2 hover:bg-blue-700`}
+                                  src={fashionObj.imageUrl}
+                                  layout="fill"
+                                  objectFit="cover"
+                                />
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             } else {
@@ -256,6 +289,7 @@ export default function ChatBox(props: Props) {
                 name="email"
                 placeholder={"Ask me to suggest an outfit..."}
                 value={textMessage}
+                maxLength={800}
                 onChange={(val) => {
                   setTextMessage(val.target.value);
                 }}

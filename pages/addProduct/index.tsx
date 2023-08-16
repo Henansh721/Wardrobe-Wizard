@@ -8,12 +8,17 @@ import { ProductDetails } from "@/lib/classModels/product/productDetails";
 import ListTag from "@/components/ListTag";
 import { useRouter } from "next/router";
 
-export const updateAPI = async (
-) => {
+export const updateAPI = async () => {
   const response = await fetch("/api/trending/updateGlobalFashionTrends", {
     method: "POST",
     body: JSON.stringify({
-      "key": 2
+      userId: "CRrie9tuvow0lmrMDbO0",
+      prompt: {
+        type: "user",
+        displayMsg: "Hello There, Wassup!",
+        promptMsg: {},
+        responseList: [],
+      },
     }),
     headers: {
       "Content-Type": "application/json",
@@ -50,7 +55,8 @@ export default function AddProduct() {
   const [productDescription, setProductDescription] = useState<string>("");
   const [productBrandName, setProductBrandName] = useState<string>("");
   const [productCategoryName, setProductCategoryName] = useState<string>("");
-  const [productSubcategoryName, setProductSubcategoryName] = useState<string>("");
+  const [productSubcategoryName, setProductSubcategoryName] =
+    useState<string>("");
   const [productTagList, setProductTagList] = useState<string[]>([]);
   const [productPrice, setProductPrice] = useState<number>(0);
 
@@ -65,13 +71,49 @@ export default function AddProduct() {
   ]);
   const [subCategoryMap, setSubcategoryMap] = useState<any>({
     "": [],
-    "TOPWEAR": ["TSHIRTS", "FORMAL-SHIRTS", "CASUAL-SHIRTS"],
-    "BOTTOMWEAR": ["JEANS", "FORMAL-TROUSERS", "CASUAL-TROUSERS", "TRACK-PANTS-TROUSERS", "SHORTS-TROUSERS", "THREE-FOURTH-TROUSERS"],
-    "FOOTWEAR": ["SPORTS-SHOES", "CASUAL-SHOES", "FORMAL-SHOES", "SANDLES-AND-FLOATERS", "FLIP-FLOPS", "LOAFERS", "BOOTS", "RUNNING-SHOES", "SNEAKERS", "FLATS", "HEELS", "WEDGES"],
-    "WATCHES": ["SPORTS-WATCHES", "ANALOG-WATCHES", "DIGITAL-WATCHES"],
-    "BAGS": ["BAGPACKS", "WALLETS", "SUITCASES", "HAND-BAGS", "SHOULDER-BAGS", "SLING-BAGS", "CLUTHES"],
-    "WINTERWEAR": ["SWEATSHIRTS", "JACKETS", "SWEATERS", "BLAZERS"],
-    'ETHNICWEAR': ["KURTA", "SHERWANI", "DHOTI", "LUNGI", "SARI", "LEHENGA", "GOWN"],
+    TOPWEAR: ["TSHIRTS", "FORMAL-SHIRTS", "CASUAL-SHIRTS"],
+    BOTTOMWEAR: [
+      "JEANS",
+      "FORMAL-TROUSERS",
+      "CASUAL-TROUSERS",
+      "TRACK-PANTS-TROUSERS",
+      "SHORTS-TROUSERS",
+      "THREE-FOURTH-TROUSERS",
+    ],
+    FOOTWEAR: [
+      "SPORTS-SHOES",
+      "CASUAL-SHOES",
+      "FORMAL-SHOES",
+      "SANDLES-AND-FLOATERS",
+      "FLIP-FLOPS",
+      "LOAFERS",
+      "BOOTS",
+      "RUNNING-SHOES",
+      "SNEAKERS",
+      "FLATS",
+      "HEELS",
+      "WEDGES",
+    ],
+    WATCHES: ["SPORTS-WATCHES", "ANALOG-WATCHES", "DIGITAL-WATCHES"],
+    BAGS: [
+      "BAGPACKS",
+      "WALLETS",
+      "SUITCASES",
+      "HAND-BAGS",
+      "SHOULDER-BAGS",
+      "SLING-BAGS",
+      "CLUTHES",
+    ],
+    WINTERWEAR: ["SWEATSHIRTS", "JACKETS", "SWEATERS", "BLAZERS"],
+    ETHNICWEAR: [
+      "KURTA",
+      "SHERWANI",
+      "DHOTI",
+      "LUNGI",
+      "SARI",
+      "LEHENGA",
+      "GOWN",
+    ],
   });
 
   const submitHandler = async () => {
@@ -168,10 +210,10 @@ export default function AddProduct() {
           />
           {productCategoryName && (
             <DropDownTile
-            header={`Select product sub-category`}
-            optionList={subCategoryMap[productCategoryName]}
-            setter={setProductSubcategoryName}
-          />
+              header={`Select product sub-category`}
+              optionList={subCategoryMap[productCategoryName]}
+              setter={setProductSubcategoryName}
+            />
           )}
           <InfoTile
             headerText={"Product price"}

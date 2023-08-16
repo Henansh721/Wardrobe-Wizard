@@ -12,6 +12,7 @@ const nextConfig = {
       "storage.googleapis.com",
       "images.staybook.in",
       "firebasestorage.googleapis.com",
+      "rukminim2.flixcart.com",
     ],
     loader: "default",
     dangerouslyAllowSVG: true,
