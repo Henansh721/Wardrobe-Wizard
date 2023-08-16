@@ -7,12 +7,12 @@ import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { USER_COLLECTION_NAME } from "@/lib/helper";
 import { db } from "@/lib/firebase";
 
-export const userPromptApiHandler = async (chatMsg: string) => {
+export const userPromptApiHandler = async (prompt: any) => {
   const response = await fetch("/api/user/updateUserPrompt", {
     method: "POST",
     body: JSON.stringify({
       userId: "CRrie9tuvow0lmrMDbO0",
-      promptMessage: chatMsg,
+      prompt: prompt,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -31,21 +31,24 @@ type Props = {
 
 export default function ChatBox(props: Props) {
   const router = useRouter();
+  const [userId, setUserId] = useState<string>("CRrie9tuvow0lmrMDbO0");
+  const [userMsgCnt, setUserMsgCnt] = useState<number>(0);
+  const [gptMsgCnt, setGptMsgCnt] = useState<number>(0);
   const [textMessage, setTextMessage] = useState<string>("");
   const [isConversationOn, setIsConversationOn] = useState<boolean>(false);
   const [selectOrderHistory, setSelectOrderHistory] = useState<boolean>(true);
-  const [userChatList, setUserChatList] = useState<string[]>([]);
-  const [gptChatList, setGptChatList] = useState<string[]>([]);
   const [globalChatList, setGlobalChatList] = useState<any[]>([]);
 
   const orderHistoryHandler = (val: boolean) => {
     setSelectOrderHistory(val);
   };
-  const conversationClearHandler = () => {
+  const conversationClearHandler = async () => {
     setIsConversationOn(false);
     setGlobalChatList([]);
-    setUserChatList([]);
-    setGptChatList([]);
+    const docRef = doc(db, USER_COLLECTION_NAME, userId);
+    const response = await updateDoc(docRef, {
+      user_Prompts_List: [],
+    });
   };
 
   const messageSubmitHandler = async (event: any) => {
@@ -54,11 +57,17 @@ export default function ChatBox(props: Props) {
     setTextMessage("");
     if (txt.length > 0) {
       setIsConversationOn(true);
-      let list = userChatList;
-      list.push(txt);
-      setUserChatList(list);
+      let list = globalChatList;
+      list = list.reverse();
+      list.push({
+        type: "user",
+        displayMsg: txt,
+        promptMsg: {},
+        responseList: [],
+      });
+      list = list.reverse();
+      setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      await userPromptApiHandler(txt);
     }
   };
 
@@ -66,8 +75,12 @@ export default function ChatBox(props: Props) {
     const updateUserChatList = onSnapshot(
       doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
       (doc) => {
-        setGlobalChatList(doc.data()?.user_Prompts_List);
-        console.log(doc.data()?.user_Prompts_List);
+        let pList = doc.data()?.user_Prompts_List;
+        let revList = pList.reverse();
+        setGlobalChatList(revList);
+        if (pList.length > 0) {
+          setIsConversationOn(true);
+        }
       }
     );
 
@@ -75,20 +88,6 @@ export default function ChatBox(props: Props) {
       updateUserChatList();
     };
   }, []);
-
-  const closeHandler = async () => {
-    if (globalChatList.length > 0) {
-      const docRef = doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0");
-      updateDoc(docRef, {
-        user_Prompts_Old_List: globalChatList,
-      });
-      updateDoc(docRef, {
-        user_Prompts_List: [],
-      });
-      setGlobalChatList([]);
-    }
-    props.setShowChatBox(false);
-  };
 
   return (
     <Fragment>
@@ -105,7 +104,9 @@ export default function ChatBox(props: Props) {
             Wardrobe Wizard
           </h1>
           <Image
-            onClick={closeHandler}
+            onClick={() => {
+              props.setShowChatBox(false);
+            }}
             className={`absolute right-1 top-1 rounded-full cursor-pointer z-10`}
             alt="img"
             width={33}
@@ -174,133 +175,48 @@ export default function ChatBox(props: Props) {
         <div
           className={`relative flex flex-col-reverse my-1 w-[92.5%] h-full overflow-y-scroll z-10 mx-auto`}
         >
-          {globalChatList.map((chat: string, index: number) => {
-            if (globalChatList.length % 2 === 0) {
-              if (index % 2 == 0) {
-                return (
-                  <div
-                    key={index}
-                    className="relative flex flex-row w-full mt-3"
-                  >
-                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                      <div
-                        className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
-                      >
-                        <Image
-                          alt="img"
-                          src={"/wizzard.png"}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
-                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                          {globalChatList[globalChatList.length - index - 1]}
-                        </div>
+          {globalChatList.map((prompt: any, index: number) => {
+            if (prompt.type === "user") {
+              return (
+                <div
+                  key={index}
+                  className="relative flex flex-row-reverse w-full mt-3"
+                >
+                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                    <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
+                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                        {prompt.displayMsg}
                       </div>
                     </div>
                   </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={index}
-                    className="relative flex flex-row-reverse w-full mt-3"
-                  >
-                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                      <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
-                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                          {globalChatList[globalChatList.length - index - 1]}
-                        </div>
+                </div>
+              );
+            } else if (prompt.type === "assistant") {
+              return (
+                <div key={index} className="relative flex flex-row w-full mt-3">
+                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                    <div
+                      className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
+                    >
+                      <Image
+                        alt="img"
+                        src={"/wizzard.png"}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </div>
+                    <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
+                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                        {prompt.displayMsg}
                       </div>
-                      {/* <div
-                        className={`relative bg-[#27293e] h-5 w-5 p-3 rounded-full top-0 right-0`}
-                      >
-                        <Image
-                          alt="img"
-                          className={`rounded-full`}
-                          src={"/user-icon.png"}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div> */}
                     </div>
                   </div>
-                );
-              }
+                </div>
+              );
             } else {
-              if (index % 2 == 0) {
-                return (
-                  <div
-                    key={index}
-                    className="relative flex flex-row-reverse w-full mt-3"
-                  >
-                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                      <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
-                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                          {globalChatList[globalChatList.length - index - 1]}
-                        </div>
-                      </div>
-                      {/* <div
-                        className={`relative bg-[#27293e] h-5 w-5 p-3 rounded-full top-0 right-0`}
-                      >
-                        <Image
-                          alt="img"
-                          className={`rounded-full`}
-                          src={"/user-icon.png"}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div> */}
-                    </div>
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={index}
-                    className="relative flex flex-row w-full mt-3"
-                  >
-                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                      <div
-                        className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
-                      >
-                        <Image
-                          alt="img"
-                          src={"/wizzard.png"}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
-                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                          {globalChatList[globalChatList.length - index - 1]}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
+              return <div key={index} />;
             }
           })}
-          {globalChatList.length % 2 != 0 ? (
-            <div
-              className={`absolute flex w-fit left-10 justify-center align-middle items-center text-center space-x-1 mx-auto bottom-1 z-40 p-1 rounded-full`}
-            >
-              <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
-                <Image
-                  className={`rounded-full`}
-                  alt="img"
-                  src={"/circles-menu.gif"}
-                  layout="fill"
-                  objectFit="cover"
-                />
-              </div>
-              <p className={`font-mono text-xs`}>responding</p>
-            </div>
-          ) : (
-            <div />
-          )}
         </div>
 
         <div
