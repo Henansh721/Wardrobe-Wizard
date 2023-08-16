@@ -200,22 +200,27 @@ export default function Profile() {
             </div>
             {profileSection === sectionList[0] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll`}
-              ></div>
+                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
+              >
+                <InfoContainer header={`User name`} text={`Henansh Tanwar`} />
+                <InfoContainer header={`User gender`} text={`male`} />
+                <InfoContainer header={`User emial id`} text={`henanshtanwar@gmail.com`} />
+                <InfoContainer header={`User mobile number`} text={`1234567890`} />
+              </div>
             )}
             {profileSection === sectionList[1] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
               ></div>
             )}
             {profileSection === sectionList[2] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
               ></div>
             )}
             {profileSection === sectionList[3] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
               ></div>
             )}
           </div>
@@ -247,3 +252,20 @@ export default function Profile() {
     </Fragment>
   );
 }
+
+export const InfoContainer = (props: any) => {
+  return (
+    <div
+      className={`relative flex flex-col w-full py-3 px-5 space-y-1 bg-slate-100 rounded-lg shadow-md`}
+    >
+      <h1
+        className={`relative w-full font-semibold text-md text-gray-500 font-serif`}
+      >
+        {props.header}
+      </h1>
+      <p className={`relative w-full font-medium text-xl font-sans`}>
+        {props.text}
+      </p>
+    </div>
+  );
+};
