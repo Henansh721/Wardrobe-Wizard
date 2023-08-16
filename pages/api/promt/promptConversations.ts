@@ -4,15 +4,14 @@ import { USER_COLLECTION_NAME } from "@/lib/helper";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 async function handler(req: any, res: any) {
-  const { userId } = req.body;
+  const { msg } = req.body;
   //   const { userId } = req.query;
+  console.log(msg);
 
   try {
-    const docRef = doc(db, USER_COLLECTION_NAME, userId);
-    const userInfo = await getDoc(docRef);
-    let promptsList = userInfo.data()?.user_Prompts_List;
-
-    res.status(201).json(promptsList);
+    res.status(201).json({
+      msg: `Sending message from server, ${msg}`,
+    });
   } catch (error) {
     res.status(422).json({
       details: null,

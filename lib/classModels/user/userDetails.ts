@@ -26,6 +26,8 @@ export class UserDetails {
   };
   user_Style_Tags_List: string[] = [];
   user_Style_Colors_List: string[] = [];
+  user_Prompts_List: any[] = [];
+  user_Prompts_Old_List: any[] = [];
   user_Purchase_Brand_Name_Map: any = {};
   user_Style_Colors_Map: any = {};
 

@@ -1,8 +1,28 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { USER_COLLECTION_NAME } from "@/lib/helper";
+import { db } from "@/lib/firebase";
+
+export const userPromptApiHandler = async (chatMsg: string) => {
+  const response = await fetch("/api/user/updateUserPrompt", {
+    method: "POST",
+    body: JSON.stringify({
+      userId: "CRrie9tuvow0lmrMDbO0",
+      promptMessage: chatMsg,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
 
 type Props = {
   showChatBox: boolean;
@@ -16,7 +36,7 @@ export default function ChatBox(props: Props) {
   const [selectOrderHistory, setSelectOrderHistory] = useState<boolean>(true);
   const [userChatList, setUserChatList] = useState<string[]>([]);
   const [gptChatList, setGptChatList] = useState<string[]>([]);
-  const [globalChatList, setGlobalChatList] = useState<string[]>([]);
+  const [globalChatList, setGlobalChatList] = useState<any[]>([]);
 
   const orderHistoryHandler = (val: boolean) => {
     setSelectOrderHistory(val);
@@ -28,16 +48,46 @@ export default function ChatBox(props: Props) {
     setGptChatList([]);
   };
 
-  const messageSubmitHandler = (event: any) => {
+  const messageSubmitHandler = async (event: any) => {
     event.preventDefault();
-    setIsConversationOn(true);
-    if (textMessage.trim().length > 0) {
+    const txt = textMessage.trim();
+    setTextMessage("");
+    if (txt.length > 0) {
+      setIsConversationOn(true);
       let list = userChatList;
-      list.push(textMessage.trim());
+      list.push(txt);
       setUserChatList(list);
       setGlobalChatList(list);
+      await userPromptApiHandler(txt);
     }
-    setTextMessage("");
+  };
+
+  useEffect(() => {
+    const updateUserChatList = onSnapshot(
+      doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
+      (doc) => {
+        setGlobalChatList(doc.data()?.user_Prompts_List);
+        console.log(doc.data()?.user_Prompts_List);
+      }
+    );
+
+    return () => {
+      updateUserChatList();
+    };
+  }, []);
+
+  const closeHandler = async () => {
+    if (globalChatList.length > 0) {
+      const docRef = doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0");
+      updateDoc(docRef, {
+        user_Prompts_Old_List: globalChatList,
+      });
+      updateDoc(docRef, {
+        user_Prompts_List: [],
+      });
+      setGlobalChatList([]);
+    }
+    props.setShowChatBox(false);
   };
 
   return (
@@ -55,9 +105,7 @@ export default function ChatBox(props: Props) {
             Wardrobe Wizard
           </h1>
           <Image
-            onClick={() => {
-              props.setShowChatBox(false);
-            }}
+            onClick={closeHandler}
             className={`absolute right-1 top-1 rounded-full cursor-pointer z-10`}
             alt="img"
             width={33}
@@ -71,7 +119,6 @@ export default function ChatBox(props: Props) {
           } ${isConversationOn ? "opacity-0" : "opacity-100"}`}
         >
           <Image
-            onClick={conversationClearHandler}
             className={`mb-2`}
             alt="img"
             width={150}
@@ -128,56 +175,132 @@ export default function ChatBox(props: Props) {
           className={`relative flex flex-col-reverse my-1 w-[92.5%] h-full overflow-y-scroll z-10 mx-auto`}
         >
           {globalChatList.map((chat: string, index: number) => {
-            if (index % 2 == 0) {
-              return (
-                <div
-                  key={index}
-                  className="relative flex flex-row-reverse w-full mt-3"
-                >
-                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                    <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
-                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                        {globalChatList[globalChatList.length - index - 1]}
+            if (globalChatList.length % 2 === 0) {
+              if (index % 2 == 0) {
+                return (
+                  <div
+                    key={index}
+                    className="relative flex flex-row w-full mt-3"
+                  >
+                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                      <div
+                        className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
+                      >
+                        <Image
+                          alt="img"
+                          src={"/wizzard.png"}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </div>
+                      <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
+                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                          {globalChatList[globalChatList.length - index - 1]}
+                        </div>
                       </div>
                     </div>
-                    {/* <div
-                      className={`relative bg-[#27293e] h-5 w-5 p-3 rounded-full top-0 right-0`}
-                    >
-                      <Image
-                        alt="img"
-                        className={`rounded-full`}
-                        src={"/user-icon.png"}
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </div> */}
                   </div>
-                </div>
-              );
+                );
+              } else {
+                return (
+                  <div
+                    key={index}
+                    className="relative flex flex-row-reverse w-full mt-3"
+                  >
+                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                      <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
+                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                          {globalChatList[globalChatList.length - index - 1]}
+                        </div>
+                      </div>
+                      {/* <div
+                        className={`relative bg-[#27293e] h-5 w-5 p-3 rounded-full top-0 right-0`}
+                      >
+                        <Image
+                          alt="img"
+                          className={`rounded-full`}
+                          src={"/user-icon.png"}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </div> */}
+                    </div>
+                  </div>
+                );
+              }
             } else {
-              return (
-                <div key={index} className="relative flex flex-row w-full mt-3">
-                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
-                    <div
-                      className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
-                    >
-                      <Image
-                        alt="img"
-                        src={"/wizzard.png"}
-                        layout="fill"
-                        objectFit="cover"
-                      />
+              if (index % 2 == 0) {
+                return (
+                  <div
+                    key={index}
+                    className="relative flex flex-row-reverse w-full mt-3"
+                  >
+                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                      <div className="rounded-l-full rounded-br-full overflow-hidden bg-blue-700 text-white">
+                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                          {globalChatList[globalChatList.length - index - 1]}
+                        </div>
+                      </div>
+                      {/* <div
+                        className={`relative bg-[#27293e] h-5 w-5 p-3 rounded-full top-0 right-0`}
+                      >
+                        <Image
+                          alt="img"
+                          className={`rounded-full`}
+                          src={"/user-icon.png"}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </div> */}
                     </div>
-                    <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
-                      <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
-                        {globalChatList[globalChatList.length - index - 1]}
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={index}
+                    className="relative flex flex-row w-full mt-3"
+                  >
+                    <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                      <div
+                        className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
+                      >
+                        <Image
+                          alt="img"
+                          src={"/wizzard.png"}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </div>
+                      <div className="rounded-r-full rounded-bl-full overflow-hidden bg-[#27293e] text-white">
+                        <div className="max-h-[5rem] overflow-hidden break-all py-2 px-5">
+                          {globalChatList[globalChatList.length - index - 1]}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
+                );
+              }
             }
           })}
+          {globalChatList.length % 2 != 0 ? (
+            <div
+              className={`absolute flex w-fit left-10 justify-center align-middle items-center text-center space-x-1 mx-auto bottom-1 z-40 p-1 rounded-full`}
+            >
+              <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
+                <Image
+                  className={`rounded-full`}
+                  alt="img"
+                  src={"/circles-menu.gif"}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+              <p className={`font-mono text-xs`}>responding</p>
+            </div>
+          ) : (
+            <div />
+          )}
         </div>
 
         <div
