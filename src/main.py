@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from FashionOutfitGeneratorResource import FashionOutfitGeneratorResource
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)

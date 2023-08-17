@@ -4,8 +4,8 @@ from UserDetail import UserDetails
 
 import re, json, requests
 
-GET_CHAT_COMPLETION_ENDPOINT = KeyVault.getKeyValue("GET_CHAT_COMPLETION_ENDPOINTT")
-PUSH_CHAT_COMPLETION_ENDPOINT = KeyVault.getKeyValue("PUSH_CHAT_COMPLETION_ENDPOINTT")
+GET_CHAT_COMPLETION_ENDPOINT = KeyVault.getKeyValue("GET_CHAT_COMPLETION_ENDPOINT")
+PUSH_CHAT_COMPLETION_ENDPOINT = KeyVault.getKeyValue("PUSH_CHAT_COMPLETION_ENDPOINT")
 
 
 class ChatCompletionObject:
@@ -14,11 +14,11 @@ class ChatCompletionObject:
 
     def fetchFashionCompletionMessages(self, _userID):
         response = requests.get(GET_CHAT_COMPLETION_ENDPOINT+_userID)
-        return json.loads(response)
+        return json.loads(response.content)
     
     def pushFashionCompletionMessages(self, _responseJson):
 
-        response = requests.push(PUSH_CHAT_COMPLETION_ENDPOINT, json= _responseJson)
+        response = requests.post(PUSH_CHAT_COMPLETION_ENDPOINT, json= _responseJson)
         return response.status_code
     
 
@@ -42,7 +42,22 @@ class ChatCompletionObject:
     def createFashionPrompts(self, _userID, _fashionPrompt):
         (userDetail, globalFashiontrends) = self.fetchInputParameters(_userID, _fashionPrompt)
 
-        chatCompletionObject = [{"role": "system", "content": KeyVault.getKeyValue("OPENAI_FASHION_GENERATOR_SYSTEM_PROMPT").format(Basic_Customer_Details = userDetail.getUserDetailsJson, Overall_Fashion_Trends = globalFashiontrends["SOCIAL_TRENDS"], Influencers_Outfit_Descp = globalFashiontrends["INFLUENCER_TRENDS"])}]
+        chatCompletionObject = [{"role": "system", "content": KeyVault.getKeyValue("OPENAI_FASHION_GENERATOR_SYSTEM_PROMPT").format(Basic_Customer_Details = userDetail.getUserDetailsJson(), Overall_Fashion_Trends = globalFashiontrends["SOCIAL_TRENDS"], Influencers_Outfit_Descp = globalFashiontrends["INFLUENCER_TRENDS"])}]
+
+        _systemPrompt = {
+            "userId" : _userID,
+            "prompt" : {
+                "type" : "system",
+                "dispMsg" : "None",
+                "promptMsg" : chatCompletionObject[0]["content"],
+                "responseList" : []
+            }
+        }
+
+        respose = self.pushFashionCompletionMessages(_systemPrompt)
+
+        if respose != 201:
+            raise Exception("Unable to Push System Prompt in DB")
 
         return chatCompletionObject
 
@@ -51,9 +66,8 @@ class ChatCompletionObject:
         chatCompletionObject = []
         _chatMessages = self.fetchFashionCompletionMessages(_userID)
 
-        for e in _chatMessages:
-            _chat = json.load(e)
-            _message = {"role":_chat["type"], "content" : _chat["textMsg"]}
+        for _chat in _chatMessages:
+            _message = {"role":_chat["type"], "content" : json.dumps(_chat["promptMsg"])}
             chatCompletionObject.append(_message)
 
         return chatCompletionObject
