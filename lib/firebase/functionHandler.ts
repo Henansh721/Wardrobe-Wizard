@@ -32,3 +32,69 @@ export const getProductDetails = async (
 
   return product;
 };
+
+export const getUserDetails = async (userInfo: any): Promise<UserDetails> => {
+  let user = new UserDetails();
+  // const docRef = doc(db, USER_COLLECTION_NAME, userId);
+  // const userInfo = await getDoc(docRef);
+
+  user.user_Id = userInfo.id;
+  user.user_Name = userInfo.data()?.user_Name;
+  user.user_Email_Id = userInfo.data()?.user_Email_Id;
+  user.user_Gender = userInfo.data()?.user_Gender;
+  user.user_Mobile_Number = userInfo.data()?.user_Mobile_Number;
+  user.user_Age = userInfo.data()?.user_Age;
+  user.user_Address = userInfo.data()?.user_Address;
+  user.user_Body_Type = userInfo.data()?.user_Body_Type;
+  user.user_Body_Shape = userInfo.data()?.user_Body_Shape;
+  user.user_Style_Tags_List = userInfo.data()?.user_Style_Tags_List;
+  user.user_Prompts_List = userInfo.data()?.user_Prompts_List;
+  user.user_Purchase_Brand_Name_Map =
+    userInfo.data()?.user_Purchase_Brand_Name_Map;
+  user.user_Style_Colors_Map = userInfo.data()?.user_Style_Colors_Map;
+  user.cart_Product_Id_List = userInfo.data()?.cart_Product_Id_List;
+
+  const orderHistoryCollectionRef = collection(
+    db,
+    USER_COLLECTION_NAME,
+    userInfo.id,
+    USER_ORDERS_COLLECTION_NAME
+  );
+  const orderHistoryQuerySnapshot = await getDocs(orderHistoryCollectionRef);
+
+  let cartList: ProductDetails[] = [];
+  for (let i in user.cart_Product_Id_List) {
+    let prd = await getProductDetails(
+      user.cart_Product_Id_List[i].product_Category,
+      user.cart_Product_Id_List[i].product_Id
+    );
+    cartList.push(prd);
+  }
+
+  user.cart_Product_List = cartList;
+
+  let list: ProductOrderDetails[] = [];
+  // List of all available hotel Amenities
+  for (let order of orderHistoryQuerySnapshot.docs) {
+    let orderInfo = new ProductOrderDetails();
+    orderInfo.order_Id = order.data().order_Id;
+    orderInfo.product_Id = order.data().product_Id;
+    orderInfo.product_Category = order.data().product_Category;
+    orderInfo.order_Quantity = order.data().order_Quantity;
+    orderInfo.product_Dimensions = order.data().product_Dimensions;
+    orderInfo.order_Price = order.data().order_Price;
+    orderInfo.order_Date = new Date();
+    orderInfo.order_Delivery_Date = new Date();
+    orderInfo.order_Location = order.data()?.order_Location;
+    orderInfo.order_Product_Details = await getProductDetails(
+      order.data().product_Category,
+      order.data().product_Id
+    );
+
+    list.push(orderInfo);
+  }
+
+  user.order_History_List = list;
+
+  return user;
+};

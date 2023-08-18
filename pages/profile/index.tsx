@@ -9,6 +9,8 @@ import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { USER_COLLECTION_NAME } from "@/lib/helper";
 import { db } from "@/lib/firebase";
 import { UserDetails } from "@/lib/classModels/user/userDetails";
+import { getUserDetails } from "@/lib/firebase/functionHandler";
+import { ProductDetails } from "@/lib/classModels/product/productDetails";
 
 export default function Profile() {
   const router = useRouter();
@@ -22,26 +24,17 @@ export default function Profile() {
     10, 20, 30, 40, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
   ]);
   const [orderList, setOrderList] = useState<ProductOrderDetails[]>([]);
-  const [cartList, setCartList] = useState<ProductOrderDetails[]>([]);
+  const [cartList, setCartList] = useState<ProductDetails[]>([]);
 
   useEffect(() => {
     const fetchUserDetails = onSnapshot(
       doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
-      (doc) => {
-        let user = new UserDetails();
-        user.user_Id = doc.id;
-        user.user_Name = doc.data()?.user_Name;
-        user.user_Email_Id = doc.data()?.user_Email_Id;
-        user.user_Gender = doc.data()?.user_Gender;
-        user.user_Mobile_Number = doc.data()?.user_Mobile_Number;
-        user.user_Age = doc.data()?.user_Age;
-        user.user_Address = doc.data()?.user_Address;
-        user.cart_Product_Id_List = doc.data()?.cart_Product_Id_List;
-        user.user_Body_Type = doc.data()?.user_Body_Type;
-        user.user_Body_Shape = doc.data()?.user_Body_Shape;
-        user.user_Style_Tags_List = doc.data()?.user_Style_Tags_List;
-        user.user_Style_Colors_List = doc.data()?.user_Style_Colors_List;
-        
+      async (doc) => {
+        let user = await getUserDetails(doc);
+        console.log(user);
+        setUserDetails(user);
+        setOrderList(user.order_History_List);
+        setCartList(user.cart_Product_List);
       }
     );
 
@@ -56,30 +49,97 @@ export default function Profile() {
         <title>{`User Profile`}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <main className={`w-screen h-screen flex`}>
-        <div className={`relative w-full flex h-full`}>
+      <main className={`w-screen h-screen flex flex-col`}>
+        <div
+          className={`relative flex w-full justify-evenly bg-blue-700 py-2 px-4`}
+        >
+          <div className={`relative flex space-x-2 w-[50%]`}>
+            <Image
+              alt="img"
+              src={"/fk-plus.png"}
+              layout="fixed"
+              objectFit="cover"
+              width={120}
+              height={60}
+            />
+            <input
+              className={`border border-gray-400 text-sm font-sans px-3 py-2 w-full`}
+              type={"text"}
+              name="name"
+              placeholder={`Search your products, brands and more`}
+              value={""}
+              onChange={(val) => {}}
+            />
+          </div>
           <div
-            className={`relative flex flex-row w-full h-full space-x-2 p-3 mx-auto justify-center`}
+            className={`relative flex space-x-14 my-auto justify-center w-fit`}
+          >
+            <div
+              className={`relative w-fit flex justify-center text-white font-semibold font-sans text-lg`}
+            >
+              {userDetail.user_Name.split(" ")[0]}
+            </div>
+            <div
+              className={`relative w-fit flex justify-center text-white font-semibold font-sans text-lg`}
+            >
+              {`Become a Seller`}
+            </div>
+            <div
+              className={`relative w-fit flex justify-center text-white font-semibold font-sans text-lg`}
+            >
+              {`More`}
+            </div>
+            <div
+              className={`relative w-fit flex justify-center text-white font-semibold font-sans text-lg`}
+            >
+              {`Cart`}
+            </div>
+          </div>
+        </div>
+        <div
+          className={`relative flex w-full space-x-10 justify-center bg-white py-2 px-2`}
+        >
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Electronics`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`TVs & Appliances`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Men`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Women`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Baby & Kids`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Home & Furniture`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Sports Books & More`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Flights`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Offer Zone`}</h4>
+          <h4
+            className={`relative font-sans font-semibold text-sm`}
+          >{`Grocery`}</h4>
+        </div>
+
+        <div className={`relative w-full h-[87.5%] flex bg-gray-200`}>
+          <div
+            className={`relative flex flex-row w-full h-full space-x-4 p-3 mx-auto justify-center`}
           >
             {displayImgUrl !== "" && (
               <div
                 className={`absolute w-full h-full flex flex-row space-x-2 p-1 z-10 bg-slate-200`}
               >
                 <div className={`relative flex flex-col w-[40%] h-full`}>
-                  {/* <div
-                    onClick={() => {
-                      setDisplayImgUrl("");
-                    }}
-                    className={`absolute h-7 w-7 top-2 right-2 p-1 rounded-full z-20`}
-                  >
-                    <Image
-                      alt="img"
-                      className={`rounded-full cursor-pointer`}
-                      src={`/cross.png`}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div> */}
                   <div
                     className={`realtive w-full h-full mx-auto top-0 rounded-t-lg bg-white`}
                   >
@@ -171,97 +231,127 @@ export default function Profile() {
               </div>
             )}
             <div
-              className={`relative flex flex-col w-[15%] md:w-[20%] shadow-2xl space-y-3`}
+              className={`relative flex flex-col w-[15%] md:w-[20%] space-y-4 bg-gray-200`}
             >
               <div
                 onClick={() => {
                   setProfileSection(sectionList[0]);
                 }}
-                className={`relative flex w-full px-2 py-4 space-x-4 shadow-lg hover:shadow-xl border-[1px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
+                className={`relative flex w-full px-2 py-4 space-x-4 border-[1px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
                   profileSection === sectionList[0] ? "bg-blue-300" : "bg-white"
                 }`}
               >
-                <Image
-                  alt="img"
-                  className={`rounded-full`}
-                  src={"/user-icon.png"}
-                  layout="fixed"
-                  objectFit="cover"
-                  width={70}
-                  height={70}
-                />
-                <div
-                  className={`relative flex flex-col w-full h-full justify-evenly`}
-                >
+                <div className={`relative min-w-[30%] my-auto`}>
+                  <Image
+                    alt="img"
+                    className={`relative rounded-full`}
+                    src={"/user-icon.png"}
+                    layout="fixed"
+                    objectFit="cover"
+                    width={70}
+                    height={70}
+                  />
+                </div>
+                <div className={`relative flex flex-col h-full justify-evenly`}>
                   <p className={`relative w-full text-xs`}>Hello,</p>
                   <p
                     className={`relative w-full font-semibold text-md text-black`}
                   >
-                    Henansh Tanwar
+                    {userDetail.user_Name}
                   </p>
                 </div>
               </div>
-              <div
-                onClick={() => {
-                  setProfileSection(sectionList[1]);
-                }}
-                className={`relative flex justify-center w-full px-2 py-4 shadow-md hover:shadow-xl border-[1px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
-                  profileSection === sectionList[1] ? "bg-blue-300" : "bg-white"
-                }`}
-              >
-                My Orders
+              <div className={`relative w-full flex flex-col`}>
+                <div
+                  onClick={() => {
+                    setProfileSection(sectionList[1]);
+                  }}
+                  className={`relative flex justify-center w-full px-2 py-4 border-[0.5px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
+                    profileSection === sectionList[1]
+                      ? "bg-blue-300"
+                      : "bg-white"
+                  }`}
+                >
+                  My Orders
+                </div>
+                <div
+                  onClick={() => {
+                    setProfileSection(sectionList[2]);
+                  }}
+                  className={`relative flex justify-center w-full px-2 py-4 border-[0.5px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
+                    profileSection === sectionList[2]
+                      ? "bg-blue-300"
+                      : "bg-white"
+                  }`}
+                >
+                  My Cart
+                </div>
+                <div
+                  onClick={() => {
+                    setProfileSection(sectionList[3]);
+                  }}
+                  className={`relative flex justify-center w-full px-2 py-4 border-[0.5px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
+                    profileSection === sectionList[3]
+                      ? "bg-blue-300"
+                      : "bg-white"
+                  }`}
+                >
+                  GPT Details
+                </div>
               </div>
               <div
-                onClick={() => {
-                  setProfileSection(sectionList[2]);
-                }}
-                className={`relative flex justify-center w-full px-2 py-4 shadow-md hover:shadow-xl border-[1px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
-                  profileSection === sectionList[2] ? "bg-blue-300" : "bg-white"
-                }`}
+                className={`relative w-full flex flex-col space-y-2 px-4 py-4 bg-white`}
               >
-                My Cart
-              </div>
-              <div
-                onClick={() => {
-                  setProfileSection(sectionList[3]);
-                }}
-                className={`relative flex justify-center w-full px-2 py-4 shadow-md hover:shadow-xl border-[1px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
-                  profileSection === sectionList[3] ? "bg-blue-300" : "bg-white"
-                }`}
-              >
-                GPT Details
+                <h2
+                  className={`relative w-full text-xs font-semibold`}
+                >{`Frequently Visited:`}</h2>
+                <div className={`relative flex w-full space-x-4`}>
+                  <p
+                    className={`relative w-fit text-xs text-gray-500 font-sans font-medium`}
+                  >
+                    Track Order
+                  </p>
+                  <p
+                    className={`relative w-fit text-xs text-gray-500 font-sans font-medium`}
+                  >
+                    Help Center
+                  </p>
+                </div>
               </div>
             </div>
+            {/* Personal Profile Section */}
             {profileSection === sectionList[0] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-6 py-2 overflow-y-scroll space-y-4`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] px-6 py-2 overflow-y-scroll space-y-4 bg-white`}
               >
                 <InfoContainer
                   header={`Personal Information`}
-                  text={`Henansh Tanwar`}
+                  text={userDetail.user_Name}
                 />
                 {/* <InfoContainer header={`Your Gender`} text={`male`} /> */}
-                <GenderSection header={`Your Gender`} />
+                <GenderSection
+                  header={`Your Gender`}
+                  type={userDetail.user_Gender}
+                />
                 <InfoContainer
                   header={`Email Address`}
-                  text={`henanshtanwar@gmail.com`}
+                  text={userDetail.user_Email_Id}
                 />
                 <InfoContainer
                   header={`User mobile number`}
-                  text={`+911234567890`}
+                  text={userDetail.user_Mobile_Number}
                 />
                 <FaqList />
               </div>
             )}
+            {/* Order History Section */}
             {profileSection === sectionList[1] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] px-9 py-2 overflow-y-scroll space-y-3 bg-white`}
               >
-                <div
-                  className={`relative flex w-full px-6 py-3 rounded-md mb-3`}
-                >
+                <div className={`relative flex w-full py-3 rounded-md mb-3`}>
                   <input
-                    className={`border border-gray-400 text-sm font-sans px-3 py-3 w-[85%]`}
+                    className={`border border-gray-400 text-sm font-sans px-3 py-3 w-[82.5%]`}
                     type={"text"}
                     name="name"
                     placeholder={`Search your orders here`}
@@ -269,17 +359,17 @@ export default function Profile() {
                     onChange={(val) => {}}
                   />
                   <button
-                    className={`relative w-[15%] h-full text-white font-sans font-medium bg-blue-600`}
+                    className={`relative w-[17.5%] h-full text-white font-sans font-medium bg-blue-600`}
                   >
                     Search
                   </button>
                 </div>
                 <div
-                  className={`relative flex flex-col space-y-2 w-full overflow-y-scroll px-2 py-2`}
+                  className={`relative flex flex-col space-y-2 w-full h-full overflow-y-scroll py-2`}
                 >
                   {orderList.map(
                     (product: ProductOrderDetails, index: number) => (
-                      <ProductContainer key={index} productInfo={product} />
+                      <ProductOrderTab key={index} productInfo={product} />
                     )
                   )}
                 </div>
@@ -287,12 +377,12 @@ export default function Profile() {
             )}
             {profileSection === sectionList[2] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] px-3 py-2 overflow-y-scroll space-y-3 bg-white`}
               ></div>
             )}
             {profileSection === sectionList[3] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] px-3 py-2 overflow-y-scroll space-y-3 bg-white`}
               ></div>
             )}
           </div>
@@ -305,28 +395,42 @@ export default function Profile() {
             />
           )}
         </div>
+        {!showChatBox && (
+          <div
+            className={`absolute bg-[#27293e] hover:bg-blue-700 h-16 w-16 rounded-full p-3 right-5 bottom-5 z-10 cursor-pointer shadow-2xl`}
+          >
+            <Image
+              onClick={() => {
+                setShowChatBox(true);
+              }}
+              alt="img"
+              src={"/wizzard.png"}
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+        )}
       </main>
-      {!showChatBox && (
-        <div
-          className={`absolute bg-[#27293e] hover:bg-blue-700 h-16 w-16 rounded-full p-3 right-5 bottom-5 z-10 cursor-pointer shadow-2xl`}
-        >
-          <Image
-            onClick={() => {
-              setShowChatBox(true);
-            }}
-            alt="img"
-            src={"/wizzard.png"}
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
-      )}
     </Fragment>
   );
 }
 
-export const ProductContainer = (props: any) => {
-  return <div className={`relative flex w-full px-4 py-2 border-[1px] border-gray-400`}></div>;
+export const ProductOrderTab = (props: any) => {
+  return (
+    <div
+      className={`relative flex w-full px-8 py-4 border-[0.1px] border-gray-400 align-middle rounded-md hover:shadow-lg cursor-pointer`}
+    >
+      <Image
+        alt="img"
+        // className={`rounded-full`}
+        src={props.productInfo.order_Product_Details.product_Image_Url}
+        layout="fixed"
+        objectFit="cover"
+        width={90}
+        height={80}
+      />
+    </div>
+  );
 };
 
 export const InfoContainer = (props: any) => {
@@ -352,11 +456,12 @@ export const InfoContainer = (props: any) => {
 };
 
 export const GenderSection = (props: any) => {
-  const [selectedGender, setSelectedGender] = useState<string>("male"); // To keep track of the selected gender
+  // const [selectedGender, setSelectedGender] = useState<string>(props.type.toLowerCase()); // To keep track of the selected gender
+  // console.log(props.type.toLowerCase());
 
-  const handleGenderChange = (gender: string) => {
-    // setSelectedGender(gender);
-  };
+  // const handleGenderChange = (gender: string) => {
+  //   // setSelectedGender(gender);
+  // };
   return (
     <div className={`relative flex flex-col w-full py-3 space-y-3`}>
       <div className={`relative flex w-full space-x-5`}>
@@ -371,14 +476,14 @@ export const GenderSection = (props: any) => {
         <div className={`relative fflex`}>
           <label
             className={`checkbox flex space-x-3 ${
-              selectedGender === "male" ? "selected" : ""
+              props.type.toLowerCase() === "male" ? "selected" : ""
             }`}
           >
             <input
               type="checkbox"
               value="male"
-              checked={selectedGender === "male"}
-              onChange={() => handleGenderChange("male")}
+              checked={props.type.toLowerCase() === "male"}
+              // onChange={() => {}}
             />
             <p>Male</p>
           </label>
@@ -386,14 +491,14 @@ export const GenderSection = (props: any) => {
         <div className={`relative flex`}>
           <label
             className={`checkbox flex space-x-3 ${
-              selectedGender === "female" ? "selected" : ""
+              props.type.toLowerCase() === "female" ? "selected" : ""
             }`}
           >
             <input
               type="checkbox"
               value="female"
-              checked={selectedGender === "female"}
-              onChange={() => handleGenderChange("female")}
+              checked={props.type.toLowerCase() === "female"}
+              // onChange={() => {}}
             />
             <p>Female</p>
           </label>

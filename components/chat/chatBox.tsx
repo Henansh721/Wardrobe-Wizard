@@ -71,7 +71,7 @@ export default function ChatBox(props: Props) {
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      userPromptApiHandler(userId, obj);
+      // await userPromptApiHandler(userId, obj);
     }
   };
 
@@ -100,7 +100,7 @@ export default function ChatBox(props: Props) {
         initial={{ opacity: 0.0, x: 50 }}
         transition={{ duration: 2.0, type: "spring" }}
         whileInView={{ opacity: 1, x: 0 }}
-        className={`relative flex flex-col right-0 h-screen w-full lg:w-[50%] xl:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
+        className={`relative flex flex-col right-0 w-full h-full lg:w-[50%] xl:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
       >
         <div
           className={`relative top-0 w-full h-[7%] px-1 py-2 bg-[#27293e] rounded-tl-xl z-30`}

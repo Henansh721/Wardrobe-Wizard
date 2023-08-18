@@ -1,5 +1,6 @@
 import { LocationDetails } from "../location/locationDetail";
 import { ProductOrderDetails } from "../order/orderDetails";
+import { ProductDetails } from "../product/productDetails";
 
 export class UserDetails {
   user_Id: string = "";
@@ -9,9 +10,9 @@ export class UserDetails {
   user_Mobile_Number: number = 0;
   user_Age: number = 0;
   user_Address: LocationDetails = new LocationDetails();
-  cart_Product_Id_List: string[] = [];
+  cart_Product_Id_List: any[] = [];
   order_History_List: ProductOrderDetails[] = [];
-  cart_Product_List: ProductOrderDetails[] = [];
+  cart_Product_List: ProductDetails[] = [];
 
   //////////////////////////// GPT Generated ////////////////////////////
   user_Body_Type: any = {
@@ -27,7 +28,6 @@ export class UserDetails {
     measure_scale: "",
   };
   user_Style_Tags_List: string[] = [];
-  user_Style_Colors_List: string[] = [];
   user_Prompts_List: any[] = [];
   user_Purchase_Brand_Name_Map: any = {};
   user_Style_Colors_Map: any = {};
