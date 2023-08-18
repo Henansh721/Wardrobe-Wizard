@@ -1,12 +1,18 @@
 import Image from "next/image";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import Head from "next/head";
 import ChatBox from "@/components/chat/chatBox";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { ProductOrderDetails } from "@/lib/classModels/order/orderDetails";
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { USER_COLLECTION_NAME } from "@/lib/helper";
+import { db } from "@/lib/firebase";
+import { UserDetails } from "@/lib/classModels/user/userDetails";
 
 export default function Profile() {
   const router = useRouter();
+  const [userDetail, setUserDetails] = useState<UserDetails>(new UserDetails());
   let sectionList = ["personal-info", "my-orders", "my-cart", "gpt-details"];
   const [profileSection, setProfileSection] = useState<string>(sectionList[0]);
   const [showChatBox, setShowChatBox] = useState<boolean>(false);
@@ -15,6 +21,34 @@ export default function Profile() {
   const [itemSize, setItemSize] = useState<number[]>([
     10, 20, 30, 40, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
   ]);
+  const [orderList, setOrderList] = useState<ProductOrderDetails[]>([]);
+  const [cartList, setCartList] = useState<ProductOrderDetails[]>([]);
+
+  useEffect(() => {
+    const fetchUserDetails = onSnapshot(
+      doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
+      (doc) => {
+        let user = new UserDetails();
+        user.user_Id = doc.id;
+        user.user_Name = doc.data()?.user_Name;
+        user.user_Email_Id = doc.data()?.user_Email_Id;
+        user.user_Gender = doc.data()?.user_Gender;
+        user.user_Mobile_Number = doc.data()?.user_Mobile_Number;
+        user.user_Age = doc.data()?.user_Age;
+        user.user_Address = doc.data()?.user_Address;
+        user.cart_Product_Id_List = doc.data()?.cart_Product_Id_List;
+        user.user_Body_Type = doc.data()?.user_Body_Type;
+        user.user_Body_Shape = doc.data()?.user_Body_Shape;
+        user.user_Style_Tags_List = doc.data()?.user_Style_Tags_List;
+        user.user_Style_Colors_List = doc.data()?.user_Style_Colors_List;
+        
+      }
+    );
+
+    return () => {
+      fetchUserDetails();
+    };
+  }, []);
 
   return (
     <Fragment>
@@ -200,18 +234,56 @@ export default function Profile() {
             </div>
             {profileSection === sectionList[0] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
+                className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-6 py-2 overflow-y-scroll space-y-4`}
               >
-                <InfoContainer header={`User name`} text={`Henansh Tanwar`} />
-                <InfoContainer header={`User gender`} text={`male`} />
-                <InfoContainer header={`User emial id`} text={`henanshtanwar@gmail.com`} />
-                <InfoContainer header={`User mobile number`} text={`1234567890`} />
+                <InfoContainer
+                  header={`Personal Information`}
+                  text={`Henansh Tanwar`}
+                />
+                {/* <InfoContainer header={`Your Gender`} text={`male`} /> */}
+                <GenderSection header={`Your Gender`} />
+                <InfoContainer
+                  header={`Email Address`}
+                  text={`henanshtanwar@gmail.com`}
+                />
+                <InfoContainer
+                  header={`User mobile number`}
+                  text={`+911234567890`}
+                />
+                <FaqList />
               </div>
             )}
             {profileSection === sectionList[1] && (
               <div
                 className={`relative flex flex-col w-[80%] md:w-[70%] shadow-2xl px-3 py-2 overflow-y-scroll space-y-3`}
-              ></div>
+              >
+                <div
+                  className={`relative flex w-full px-6 py-3 rounded-md mb-3`}
+                >
+                  <input
+                    className={`border border-gray-400 text-sm font-sans px-3 py-3 w-[85%]`}
+                    type={"text"}
+                    name="name"
+                    placeholder={`Search your orders here`}
+                    value={""}
+                    onChange={(val) => {}}
+                  />
+                  <button
+                    className={`relative w-[15%] h-full text-white font-sans font-medium bg-blue-600`}
+                  >
+                    Search
+                  </button>
+                </div>
+                <div
+                  className={`relative flex flex-col space-y-2 w-full overflow-y-scroll px-2 py-2`}
+                >
+                  {orderList.map(
+                    (product: ProductOrderDetails, index: number) => (
+                      <ProductContainer key={index} productInfo={product} />
+                    )
+                  )}
+                </div>
+              </div>
             )}
             {profileSection === sectionList[2] && (
               <div
@@ -253,19 +325,120 @@ export default function Profile() {
   );
 }
 
+export const ProductContainer = (props: any) => {
+  return <div className={`relative flex w-full px-4 py-2 border-[1px] border-gray-400`}></div>;
+};
+
 export const InfoContainer = (props: any) => {
   return (
-    <div
-      className={`relative flex flex-col w-full py-3 px-5 space-y-1 bg-slate-100 rounded-lg shadow-md`}
-    >
-      <h1
-        className={`relative w-full font-semibold text-md text-gray-500 font-serif`}
+    <div className={`relative flex flex-col w-full py-3 space-y-3`}>
+      <div className={`relative flex w-full space-x-5`}>
+        <h1 className={`relative font-semibold text-md text-black font-sans`}>
+          {props.header}
+        </h1>
+        <p className={`relative text-blue-600 font-medium cursor-pointer`}>
+          Edit
+        </p>
+      </div>
+      <div
+        className={`relative w-full sm:w-[75%] md:w-[50%] lg:w-[60%] flex py-3 px-3 bg-gray-100 border-[1px] border-gray-200`}
       >
-        {props.header}
-      </h1>
-      <p className={`relative w-full font-medium text-xl font-sans`}>
-        {props.text}
-      </p>
+        <p className={`relative w-full font-normal text-md text-gray-500`}>
+          {props.text}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export const GenderSection = (props: any) => {
+  const [selectedGender, setSelectedGender] = useState<string>("male"); // To keep track of the selected gender
+
+  const handleGenderChange = (gender: string) => {
+    // setSelectedGender(gender);
+  };
+  return (
+    <div className={`relative flex flex-col w-full py-3 space-y-3`}>
+      <div className={`relative flex w-full space-x-5`}>
+        <h1 className={`relative font-semibold text-md text-black font-sans`}>
+          {props.header}
+        </h1>
+        <p className={`relative text-blue-600 font-medium cursor-pointer`}>
+          Edit
+        </p>
+      </div>
+      <div className={`relative flex w-full space-x-8`}>
+        <div className={`relative fflex`}>
+          <label
+            className={`checkbox flex space-x-3 ${
+              selectedGender === "male" ? "selected" : ""
+            }`}
+          >
+            <input
+              type="checkbox"
+              value="male"
+              checked={selectedGender === "male"}
+              onChange={() => handleGenderChange("male")}
+            />
+            <p>Male</p>
+          </label>
+        </div>
+        <div className={`relative flex`}>
+          <label
+            className={`checkbox flex space-x-3 ${
+              selectedGender === "female" ? "selected" : ""
+            }`}
+          >
+            <input
+              type="checkbox"
+              value="female"
+              checked={selectedGender === "female"}
+              onChange={() => handleGenderChange("female")}
+            />
+            <p>Female</p>
+          </label>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const FaqList = (props: any) => {
+  return (
+    <div className={`realtive flex flex-col w-full space-y-6 pb-12`}>
+      <h1 className={`relative w-full font-semibold my-3`}>{`FAQs`}</h1>
+      <div className={`relative flex flex-col w-full space-y-3`}>
+        <h3
+          className={`relative w-full font-semibold text-sm`}
+        >{`What happens when I update my email address (or mobile number)?`}</h3>
+        <p
+          className={`relative w-full text-sm text-gray-600`}
+        >{`Your login email id (or mobile number) changes, likewise. You'll receive all your account related communication on your updated email address (or mobile number).`}</p>
+      </div>
+      <div className={`relative flex flex-col w-full space-y-3`}>
+        <h3
+          className={`relative w-full font-semibold text-sm`}
+        >{`When will my Flipkart account be updated with the new email address (or mobile number)?`}</h3>
+        <p
+          className={`relative w-full text-sm text-gray-600`}
+        >{`It happens as soon as you confirm the verification code sent to your email (or mobile) and save the changes.`}</p>
+      </div>
+      <div className={`relative flex flex-col w-full space-y-3`}>
+        <h3
+          className={`relative w-full font-semibold text-sm`}
+        >{`What happens to my existing Flipkart account when I update my email address (or mobile number)?`}</h3>
+        <p
+          className={`relative w-full text-sm text-gray-600`}
+        >{`Updating your email address (or mobile number) doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your Order history, saved information and personal details.`}</p>
+      </div>
+      <div className={`relative flex flex-col w-full space-y-3`}>
+        <h3
+          className={`relative w-full font-semibold text-sm`}
+        >{`Does my Seller account get affected when I update my email address?`}</h3>
+        <p
+          className={`relative w-full text-sm text-gray-600`}
+        >{`Flipkart has a 'single sign-on' policy. Any changes will reflect in your Seller account also.`}</p>
+      </div>
     </div>
   );
 };

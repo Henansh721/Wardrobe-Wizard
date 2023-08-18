@@ -7,12 +7,12 @@ import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { USER_COLLECTION_NAME } from "@/lib/helper";
 import { db } from "@/lib/firebase";
 
-export const userPromptApiHandler = async (prompt: any) => {
-  const response = await fetch("/api/user/updateUserPrompt", {
+export const userPromptApiHandler = async (userId: string, prompt: any) => {
+  const response = await fetch("https://fashion-outfit-generator.onrender.com/generate/outfit", {
     method: "POST",
     body: JSON.stringify({
-      userId: "CRrie9tuvow0lmrMDbO0",
-      prompt: prompt,
+      userId: userId,
+      prompt: prompt.displayMsg,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -61,15 +61,17 @@ export default function ChatBox(props: Props) {
       setIsConversationOn(true);
       let list = globalChatList;
       list = list.reverse();
-      list.push({
+      let obj = {
         type: "user",
         displayMsg: txt,
         promptMsg: {},
         responseList: [],
-      });
+      };
+      list.push(obj);
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
+      userPromptApiHandler(userId, obj);
     }
   };
 
@@ -78,9 +80,10 @@ export default function ChatBox(props: Props) {
       doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
       (doc) => {
         let pList = doc.data()?.user_Prompts_List;
+        console.log(pList);
         let revList = pList.reverse();
         setGlobalChatList(revList);
-        if (pList.length > 0) {
+        if (pList.length > 0 && !isConversationOn) {
           setIsConversationOn(true);
         }
       }
@@ -89,7 +92,7 @@ export default function ChatBox(props: Props) {
     return () => {
       updateUserChatList();
     };
-  }, []);
+  }, [isConversationOn]);
 
   return (
     <Fragment>
