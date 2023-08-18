@@ -10,6 +10,7 @@ export class UserDetails {
   user_Mobile_Number: number = 0;
   user_Age: number = 0;
   user_Address: LocationDetails = new LocationDetails();
+  user_Address_Details: any = {};
   cart_Product_Id_List: any[] = [];
   order_History_List: ProductOrderDetails[] = [];
   cart_Product_List: ProductDetails[] = [];

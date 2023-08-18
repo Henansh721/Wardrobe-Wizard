@@ -61,7 +61,7 @@ export default function Profile() {
               layout="fixed"
               objectFit="cover"
               width={120}
-              height={60}
+              height={50}
             />
             <input
               className={`border border-gray-400 text-sm font-sans px-3 py-2 w-full`}
@@ -242,7 +242,9 @@ export default function Profile() {
                   profileSection === sectionList[0] ? "bg-blue-300" : "bg-white"
                 }`}
               >
-                <div className={`relative flex justify-center min-w-[30%] my-auto`}>
+                <div
+                  className={`relative flex justify-center min-w-[30%] my-auto`}
+                >
                   <Image
                     alt="img"
                     className={`relative rounded-full`}
@@ -378,8 +380,22 @@ export default function Profile() {
             )}
             {profileSection === sectionList[2] && (
               <div
-                className={`relative flex flex-col w-[80%] md:w-[70%] px-3 py-2 overflow-y-scroll space-y-3 bg-white`}
-              ></div>
+                className={`relative flex flex-col w-[80%] md:w-[70%] px-3 py-2 overflow-y-scroll space-y-4 bg-white`}
+              >
+                <div
+                  className={`relative w-full px-3 py-4 flex align-middle border-[1px] border-gray-300`}
+                >
+                  <h4 className={`text-md`}>Deliver to: </h4>
+                  <p
+                    className={`font-semibold text-md`}
+                  >{` ${userDetail.user_Address_Details.location_City} - ${userDetail.user_Address_Details.location_Pincode}`}</p>
+                </div>
+                <div className={`relative w-full flex flex-col`}>
+                  {cartList.map((prd: ProductDetails, index: number) => (
+                    <ProductCartTab key={index} productInfo={prd} />
+                  ))}
+                </div>
+              </div>
             )}
             {profileSection === sectionList[3] && (
               <div
@@ -416,6 +432,51 @@ export default function Profile() {
   );
 }
 
+export const ProductCartTab = (props: any) => {
+  return (
+    <div
+      className={`relative flex flex-row w-full px-8 py-6 border-[0.1px] space-x-4 border-gray-200 hover:shadow-lg cursor-pointer`}
+    >
+      <div className={`relative w-[15%] flex flex-col space-y-2`}>
+        <div className={`relative w-full h-36`}>
+          <Image
+            alt="img"
+            src={props.productInfo.product_Image_Url}
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
+        <div className={`relative flex w-full space-x-2 justify-between`}>
+          <Image
+            alt="img"
+            className={`p-1 border-[1px] border-gray-400 rounded-full`}
+            src={`/minus-icon.png`}
+            layout="fixed"
+            objectFit="cover"
+            width={20}
+            height={20}
+          />
+          <div
+            className={`relative w-full text-center px-2 py-1 border-[1px] border-gray-400`}
+          >
+            1
+          </div>
+          <Image
+            alt="img"
+            className={`p-1 border-[1px] border-gray-400 rounded-full`}
+            src={`/minus-icon.png`}
+            layout="fixed"
+            objectFit="cover"
+            width={20}
+            height={20}
+          />
+        </div>
+      </div>
+      <div className={`relative w-[80%] flex flex-col`}></div>
+    </div>
+  );
+};
+
 export const ProductOrderTab = (props: any) => {
   return (
     <div
@@ -424,7 +485,6 @@ export const ProductOrderTab = (props: any) => {
       <div className={`relative flex space-x-12`}>
         <Image
           alt="img"
-          // className={`rounded-full`}
           src={props.productInfo.order_Product_Details.product_Image_Url}
           layout="fixed"
           objectFit="cover"
@@ -447,7 +507,7 @@ export const ProductOrderTab = (props: any) => {
       </div>
       <div className={`relative flex flex-col space-y-2 max-w-[30%]`}>
         <p className={`relative font-semibold text-sm`}>
-          🟢 Delivered on {format(new Date(), 'MMMM do, yyyy')}
+          🟢 Delivered on {format(new Date(), "MMMM do, yyyy")}
         </p>
         <p className={`relative text-xs`}>{`Your item has been delivered`}</p>
       </div>

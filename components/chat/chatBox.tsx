@@ -71,7 +71,7 @@ export default function ChatBox(props: Props) {
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      // await userPromptApiHandler(userId, obj);
+      // userPromptApiHandler(userId, obj);
     }
   };
 
