@@ -11,6 +11,7 @@ import { db } from "@/lib/firebase";
 import { UserDetails } from "@/lib/classModels/user/userDetails";
 import { getUserDetails } from "@/lib/firebase/functionHandler";
 import { ProductDetails } from "@/lib/classModels/product/productDetails";
+import { format } from "date-fns";
 
 export default function Profile() {
   const router = useRouter();
@@ -241,15 +242,15 @@ export default function Profile() {
                   profileSection === sectionList[0] ? "bg-blue-300" : "bg-white"
                 }`}
               >
-                <div className={`relative min-w-[30%] my-auto`}>
+                <div className={`relative flex justify-center min-w-[30%] my-auto`}>
                   <Image
                     alt="img"
                     className={`relative rounded-full`}
                     src={"/user-icon.png"}
                     layout="fixed"
                     objectFit="cover"
-                    width={70}
-                    height={70}
+                    width={60}
+                    height={60}
                   />
                 </div>
                 <div className={`relative flex flex-col h-full justify-evenly`}>
@@ -351,7 +352,7 @@ export default function Profile() {
               >
                 <div className={`relative flex w-full py-3 rounded-md mb-3`}>
                   <input
-                    className={`border border-gray-400 text-sm font-sans px-3 py-3 w-[82.5%]`}
+                    className={`border border-gray-400 text-sm font-sans px-3 py-2 w-[80%]`}
                     type={"text"}
                     name="name"
                     placeholder={`Search your orders here`}
@@ -359,7 +360,7 @@ export default function Profile() {
                     onChange={(val) => {}}
                   />
                   <button
-                    className={`relative w-[17.5%] h-full text-white font-sans font-medium bg-blue-600`}
+                    className={`relative w-[20%] h-full text-white font-sans font-medium bg-blue-600`}
                   >
                     Search
                   </button>
@@ -418,17 +419,38 @@ export default function Profile() {
 export const ProductOrderTab = (props: any) => {
   return (
     <div
-      className={`relative flex w-full px-8 py-4 border-[0.1px] border-gray-400 align-middle rounded-md hover:shadow-lg cursor-pointer`}
+      className={`relative flex w-full justify-between px-8 py-4 border-[0.1px] border-gray-400 align-middle rounded-md hover:shadow-lg cursor-pointer`}
     >
-      <Image
-        alt="img"
-        // className={`rounded-full`}
-        src={props.productInfo.order_Product_Details.product_Image_Url}
-        layout="fixed"
-        objectFit="cover"
-        width={90}
-        height={80}
-      />
+      <div className={`relative flex space-x-12`}>
+        <Image
+          alt="img"
+          // className={`rounded-full`}
+          src={props.productInfo.order_Product_Details.product_Image_Url}
+          layout="fixed"
+          objectFit="cover"
+          width={70}
+          height={60}
+        />
+        <div className={`relative flex flex-col space-y-3 max-w-[55%]`}>
+          <p className={`relative text-sm`}>
+            {props.productInfo.order_Product_Details.product_Name}
+          </p>
+          <p className={`relative text-xs text-gray-500`}>
+            Color: {props.productInfo.order_Product_Details.product_Color}
+          </p>
+        </div>
+      </div>
+      <div className={`relative flex flex-col`}>
+        <p className={`relative text-md font-medium`}>
+          ₹{props.productInfo.order_Product_Details.product_Price}
+        </p>
+      </div>
+      <div className={`relative flex flex-col space-y-2 max-w-[30%]`}>
+        <p className={`relative font-semibold text-sm`}>
+          🟢 Delivered on {format(new Date(), 'MMMM do, yyyy')}
+        </p>
+        <p className={`relative text-xs`}>{`Your item has been delivered`}</p>
+      </div>
     </div>
   );
 };
