@@ -11,11 +11,9 @@ class TrendingOutfitUtil:
 
     def getTrendingOutfits(self, top_results, isSocial):
 
-        _type = "Fashion" if isSocial else "Fashion Influencer"
-        _contain = "Outfit" if isSocial else "Influencer's Outfit"
-
-        promptMessage = KeyVault.getKeyValue("OPENAI_PERSONAL_FASHION_SYSTEM_PROMPT").format(type=_type,
-                                                                                             contain=_contain)
+        promptMessage = KeyVault.getKeyValue(
+            "OPENAI_PERSONAL_FASHION_SYSTEM_PROMPT") if isSocial else KeyVault.getKeyValue(
+            "OPENAI_PERSONAL_INFLUENCER_SYSTEM_PROMPT")
 
         chatCompletionObject = [{"role": "system", "content": promptMessage},
                                 {"role": "user", "content": json.dumps(top_results)}]
@@ -37,16 +35,19 @@ class TrendingOutfitUtil:
         searchQuery = KeyVault.getKeyValue("PERSONAL_FASHION_TRENDS") if isSocial else KeyVault.getKeyValue(
             "PERSONAL_INFLUENCER_TRENDS")
 
-        searchQuery = str(searchQuery).format(searchTearm=_trend_search_term)
+        searchQuery = str(searchQuery).format(searchTerm=_trend_search_term)
 
         results = BingSearchUtil().getSearchResult(searchQuery)
 
         urlList = []
+        _urlListSize = int(KeyVault.getKeyValue("URL_LIST_SIZE"))
 
-        for result in results[:10]:
+        for result in results[:_urlListSize]:
             urlList.append(result['url'])
 
         urlList = set(urlList)
+
+        _topResultSize = int(KeyVault.getKeyValue("TOP_RESULT_SIZE"))
 
         webScrapper = WebPageParser()
 
@@ -58,15 +59,12 @@ class TrendingOutfitUtil:
                 scrappedResponse.append(executor.submit(webScrapper.get_cleaned_text, url))
 
             for response in futures.as_completed(scrappedResponse):
-                result = response.result()
-                if result != "":
-                    top_results.append(result)
-                if len(top_results) >= 4:
-                    break
-
-            for remaining_requests in scrappedResponse:
-                if not remaining_requests.done():
-                    remaining_requests.cancel()
+                if len(top_results) >= _topResultSize:
+                    response.cancel()
+                else:
+                    result = response.result()
+                    if result != "":
+                        top_results.append(result)
 
         trendsResponse = self.getTrendingOutfits(top_results, isSocial)
 
