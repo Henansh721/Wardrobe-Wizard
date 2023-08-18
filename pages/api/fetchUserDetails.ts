@@ -30,7 +30,7 @@ async function handler(req: any, res: any) {
     user.user_Purchase_Brand_Name_Map = userInfo.data()?.user_Purchase_Brand_Name_Map;
     user.user_Address = userInfo.data()?.user_Address;
     user.user_Style_Colors_Map = userInfo.data()?.user_Style_Colors_Map;
-    user.user_Cart_List = userInfo.data()?.user_Cart_List;
+    user.cart_Product_Id_List = userInfo.data()?.cart_Product_Id_List;
 
     const orderHistoryCollectionRef = collection(
       db,
