@@ -26,7 +26,7 @@ class FashionGenerator:
                 "userId": self.userID,
                 "prompt": {
                     "type": "assistant",
-                    "dispMsg": "Generated Outfits - ",
+                    "displayMsg": "Generated Outfits - ",
                     "promptMsg": _fashionOutfitDescp,
                     "responseList": _urlResponseList
                 }
@@ -36,7 +36,7 @@ class FashionGenerator:
                 "userId": self.userID,
                 "prompt": {
                     "type": "assistant",
-                    "dispMsg": _fashionOutfitDescp["message"],
+                    "displayMsg": _fashionOutfitDescp["message"],
                     "promptMsg": _fashionOutfitDescp,
                     "responseList": _urlResponseList
                 }
@@ -44,7 +44,7 @@ class FashionGenerator:
 
         _pushToDB = self.chatCompletionObject.pushFashionCompletionMessages(_responseJson)
 
-        return _pushToDB
+        return _fashionOutfitDescp["message"]
 
     def generateFashionableOutfitDescription(self, _personalizedTrends):
 
@@ -60,21 +60,18 @@ class FashionGenerator:
             "userId": self.userID,
             "prompt": {
                 "type": "user",
-                "dispMsg": self.fashionPrompt,
+                "displayMsg": self.fashionPrompt,
                 "promptMsg": promptMessage,
                 "responseList": []
             }
         }
 
-        # with futures.ThreadPoolExecutor() as executor:
-        #     _openAISubmission  = executor.submit(
-        #         self._openAIUtil.CreateChatCompletion(chatCompletionObject=chatCompletionObject, temperature=0.7,
-        #                                               maxTokens=1000))
-        #     _pushToDB = executor.submit(self.chatCompletionObject.pushFashionCompletionMessages(_userJson))
+        with futures.ThreadPoolExecutor() as executor:
+            _openAISubmission = executor.submit(self._openAIUtil.CreateChatCompletion ,chatCompletionObject=chatCompletionObject, temperature=0.7,maxTokens=1000)
+            _pushToDB = executor.submit(self.chatCompletionObject.pushFashionCompletionMessages,_userJson)
 
-        response = self._openAIUtil.CreateChatCompletion(chatCompletionObject=chatCompletionObject, temperature=0.7,
-                                             maxTokens=1000)
-        _dbResponse = self.chatCompletionObject.pushFashionCompletionMessages(_userJson)
+        response = _openAISubmission.result()
+        _dbResponse = _pushToDB.result()
 
         if _dbResponse != 201:
             raise Exception("Unable to Push User Prompt in DB")
@@ -88,4 +85,4 @@ class FashionGenerator:
             raise Exception("NO JSON FOUND IN OPENAI RESPONSE")
 
     def getProductMatches(self, outfitDescription):
-        return [{"imgUrl": "Hello", "flipkartUrl": ""}]
+        return []

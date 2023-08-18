@@ -48,7 +48,7 @@ class ChatCompletionObject:
             "userId" : _userID,
             "prompt" : {
                 "type" : "system",
-                "dispMsg" : "None",
+                "displayMsg" : "None",
                 "promptMsg" : chatCompletionObject[0]["content"],
                 "responseList" : []
             }
