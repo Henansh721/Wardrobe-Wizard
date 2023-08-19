@@ -17,6 +17,8 @@ class WebPageParser:
                 text = soup.find('body')
                 if text:
                     text = text.get_text().strip()
-                return text[:5000]
+                    cleaned_text = ' '.join(text.split('\n'))
+                    cleaned_text = ' '.join(text.split())
+                return cleaned_text[:5000]
             except Exception:
                 return ""
