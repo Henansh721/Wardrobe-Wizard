@@ -13,6 +13,8 @@ const nextConfig = {
       "images.staybook.in",
       "firebasestorage.googleapis.com",
       "rukminim2.flixcart.com",
+      "m.media-amazon.com",
+      "assets.ajio.com",
     ],
     loader: "default",
     dangerouslyAllowSVG: true,

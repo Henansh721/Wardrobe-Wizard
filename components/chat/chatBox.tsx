@@ -58,8 +58,8 @@ export default function ChatBox(props: Props) {
   const messageSubmitHandler = async (event: any) => {
     event.preventDefault();
     const txt = textMessage.trim();
-    setTextMessage("");
-    if (txt.length > 0) {
+    if (txt.length > 0 && globalChatList.length % 2 === 0) {
+      setTextMessage("");
       setIsConversationOn(true);
       let list = globalChatList;
       list = list.reverse();
@@ -69,12 +69,12 @@ export default function ChatBox(props: Props) {
         promptMsg: {},
         responseList: [],
       };
-      console.log(globalChatList);
+      // console.log(globalChatList);
       list.push(obj);
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      console.log(list);
+      // console.log(list);
 
       userPromptApiHandler(userId, obj);
     }
@@ -278,7 +278,25 @@ export default function ChatBox(props: Props) {
         </div>
 
         {/* Bottom for entering the text */}
-        <div className={`relative flex flex-col w-full h-[10%] pb-4 pt-1 z-30`}>
+        <div
+          className={`relative flex flex-col w-full min-h-[10%] max-h-[17.5%] pb-4 pt-1 z-30`}
+        >
+          {globalChatList.length > 0 && globalChatList.length % 2 == 1 && (
+            <div
+              className={`relative z-20 flex w-fit align-middle items-center text-center space-x-2 bottom-0 p-1 mx-auto`}
+            >
+              <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
+                <Image
+                  className={`rounded-full`}
+                  alt="img"
+                  src={"/circles-menu.gif"}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+              <p className={`font-mono text-xs font-medium`}>Responding...</p>
+            </div>
+          )}
           <form
             onSubmit={messageSubmitHandler}
             className={`relative flex w-full md:w-[92.5%] mx-auto align-middle items-center space-x-2`}
