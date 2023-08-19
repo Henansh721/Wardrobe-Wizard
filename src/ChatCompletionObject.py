@@ -13,6 +13,7 @@ class ChatCompletionObject:
         pass
 
     def fetchFashionCompletionMessages(self, _userID):
+        print("Value-->>",GET_CHAT_COMPLETION_ENDPOINT+_userID)
         response = requests.get(GET_CHAT_COMPLETION_ENDPOINT+_userID)
         return json.loads(response.content)
     
