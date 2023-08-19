@@ -108,7 +108,7 @@ export default function ChatBox(props: Props) {
       >
         {/* Top Header for showing the the name of the chatbot */}
         <div
-          className={`relative top-0 w-full h-[7%] px-1 py-2 bg-[#27293e] rounded-tl-xl z-30`}
+          className={`relative top-0 w-full h-[7%] px-1 py-2 bg-[#27293e] rounded-tl-xl z-40`}
         >
           <h1 className={`sans-serif text-center text-md text-white`}>
             Wardrobe Wizard
@@ -127,8 +127,8 @@ export default function ChatBox(props: Props) {
 
         {/* Option section to select various options */}
         <div
-          className={`absolute my-auto justify-center align-middle items-center w-full h-full flex flex-col ${
-            isConversationOn ? "z-0" : "z-20"
+          className={`absolute my-auto justify-center align-middle items-center w-full h-[83%] flex flex-col ${
+            isConversationOn ? "z-0" : "z-30"
           } ${isConversationOn ? "opacity-0" : "opacity-100"}`}
         >
           <Image
@@ -186,8 +186,22 @@ export default function ChatBox(props: Props) {
 
         {/* Middle for displaying the text */}
         <div
-          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-30 mx-auto`}
+          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-20 mx-auto`}
         >
+          {/* <div
+            className={`absolute z-20 flex w-fit align-middle items-center text-center space-x-1 bottom-0 p-1 mx-auto`}
+          >
+            <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
+              <Image
+                className={`rounded-full`}
+                alt="img"
+                src={"/circles-menu.gif"}
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+            <p className={`font-mono text-xs font-medium`}>Responding</p>
+          </div> */}
           {globalChatList.map((prompt: any, index: number) => {
             if (prompt.type === "user") {
               return (
@@ -265,20 +279,6 @@ export default function ChatBox(props: Props) {
 
         {/* Bottom for entering the text */}
         <div className={`relative flex flex-col w-full h-[10%] pb-4 pt-1 z-30`}>
-          {/* <div
-            className={`absolute flex w-fit left-10 justify-center align-middle items-center text-center space-x-1 mx-auto top-0 -mt-10 z-40 p-1 rounded-full`}
-          >
-            <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
-              <Image
-                className={`rounded-full`}
-                alt="img"
-                src={"/circles-menu.gif"}
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-            <p className={`font-mono text-xs`}>responding</p>
-          </div> */}
           <form
             onSubmit={messageSubmitHandler}
             className={`relative flex w-full md:w-[92.5%] mx-auto align-middle items-center space-x-2`}
