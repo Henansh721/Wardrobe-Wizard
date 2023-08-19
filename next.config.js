@@ -16,6 +16,12 @@ const nextConfig = {
       "m.media-amazon.com",
       "assets.ajio.com",
     ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
     loader: "default",
     dangerouslyAllowSVG: true,
   },
