@@ -31,13 +31,13 @@ def process_data(data):
     # Implement your data processing logic here
     # For example, you can iterate through key-value pairs and perform operations
     
-    result = {}  # Placeholder for processed data
+    result = []  # Placeholder for processed data
     
     for key, value in data.items():
         # do an api call to bing image extractor to get the image
         bing_api = BingImageSearchAPI(os.getenv('subscription_key'))
         thumbnail_url = bing_api.search_images(value + " Flipkart")
-        result[key] = thumbnail_url
+        result.append({"imageUrl":thumbnail_url,"flipkartUrl" : "https://www.flipkart.com/"})
     
     return result
 
