@@ -80,7 +80,6 @@ export default function ChatBox(props: Props) {
       doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
       (doc) => {
         let pList = doc.data()?.user_Prompts_List;
-        console.log(pList);
         let revList = pList.reverse();
         setGlobalChatList(revList);
         if (pList.length > 0 && !isConversationOn) {
@@ -178,7 +177,7 @@ export default function ChatBox(props: Props) {
         </div>
 
         <div
-          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-full overflow-y-scroll z-10 mx-auto`}
+          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-10 mx-auto`}
         >
           {globalChatList.map((prompt: any, index: number) => {
             if (prompt.type === "user") {

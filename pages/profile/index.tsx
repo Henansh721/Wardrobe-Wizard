@@ -13,6 +13,24 @@ import { getUserDetails } from "@/lib/firebase/functionHandler";
 import { ProductDetails } from "@/lib/classModels/product/productDetails";
 import { format } from "date-fns";
 
+export const userPromptApiHandler = async () => {
+  const response = await fetch("https://fashion-outfit-generator.onrender.com/generate/outfit", {
+    method: "POST",
+    body: JSON.stringify({
+      userId: "CRrie9tuvow0lmrMDbO0",
+      prompt: "Hi, how are you?",
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // redirect: 'manual', 
+  });
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
 export default function Profile() {
   const router = useRouter();
   const [userDetail, setUserDetails] = useState<UserDetails>(new UserDetails());
@@ -51,6 +69,7 @@ export default function Profile() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`w-screen h-screen flex flex-col`}>
+        <button onClick={userPromptApiHandler}>Click</button>
         <div
           className={`relative flex w-full justify-evenly bg-blue-700 py-2 px-4`}
         >
@@ -383,12 +402,21 @@ export default function Profile() {
                 className={`relative flex flex-col w-[80%] md:w-[70%] px-3 py-2 overflow-y-scroll space-y-4 bg-white`}
               >
                 <div
-                  className={`relative w-full px-3 py-4 flex align-middle border-[1px] border-gray-300`}
+                  className={`relative w-full px-5 py-2 flex justify-between align-middle border-[0.1px] border-gray-200`}
                 >
-                  <h4 className={`text-md`}>Deliver to: </h4>
-                  <p
-                    className={`font-semibold text-md`}
-                  >{` ${userDetail.user_Address_Details.location_City} - ${userDetail.user_Address_Details.location_Pincode}`}</p>
+                  <div
+                    className={`relative w-full flex items-center align-middle`}
+                  >
+                    <h4 className={`text-md`}>Deliver to: </h4>&nbsp;&nbsp; 
+                    <p
+                      className={`font-semibold text-md`}
+                    >{` ${userDetail.user_Address_Details.location_City} - ${userDetail.user_Address_Details.location_Pincode}`}</p>
+                  </div>
+                  <div
+                    className={`relative w-fit px-5 py-3 cursor-pointer hover:shadow-lg text-blue-500 border-[1px] border-gray-300 rounded-[5px] text-xs font-sans font-semibold`}
+                  >
+                    Change
+                  </div>
                 </div>
                 <div className={`relative w-full flex flex-col`}>
                   {cartList.map((prd: ProductDetails, index: number) => (
@@ -435,9 +463,9 @@ export default function Profile() {
 export const ProductCartTab = (props: any) => {
   return (
     <div
-      className={`relative flex flex-row w-full px-8 py-6 border-[0.1px] space-x-4 border-gray-200 hover:shadow-lg cursor-pointer`}
+      className={`relative flex flex-row w-full px-8 py-6 justify-between border-[0.1px] space-x-6 border-gray-200 hover:shadow-lg`}
     >
-      <div className={`relative w-[15%] flex flex-col space-y-2`}>
+      <div className={`relative w-[17.5%] flex flex-col space-y-2`}>
         <div className={`relative w-full h-36`}>
           <Image
             alt="img"
@@ -446,33 +474,92 @@ export const ProductCartTab = (props: any) => {
             objectFit="cover"
           />
         </div>
-        <div className={`relative flex w-full space-x-2 justify-between`}>
+        <div
+          className={`relative flex w-full space-x-1 justify-between align-middle items-center`}
+        >
           <Image
             alt="img"
-            className={`p-1 border-[1px] border-gray-400 rounded-full`}
+            className={`p-2 border-[1px] border-gray-400 rounded-full h-fit cursor-pointer hover:bg-gray-200`}
             src={`/minus-icon.png`}
             layout="fixed"
             objectFit="cover"
-            width={20}
-            height={20}
+            width={30}
+            height={30}
           />
           <div
-            className={`relative w-full text-center px-2 py-1 border-[1px] border-gray-400`}
+            className={`relative w-full text-center py-1 border-[1px] border-gray-400`}
           >
             1
           </div>
           <Image
             alt="img"
-            className={`p-1 border-[1px] border-gray-400 rounded-full`}
-            src={`/minus-icon.png`}
+            className={`p-2 border-[1px] border-gray-400 rounded-full h-fit cursor-pointer hover:bg-gray-200`}
+            src={`/plus-icon.png`}
             layout="fixed"
             objectFit="cover"
-            width={20}
-            height={20}
+            width={30}
+            height={30}
           />
         </div>
       </div>
-      <div className={`relative w-[80%] flex flex-col`}></div>
+      <div className={`relative w-[65%] flex flex-col justify-between`}>
+        <div className={`relative flex flex-col w-full h-full space-y-1`}>
+          <h2 className={`relative w-full text-semibold text-md overflow-clip`}>
+            {props.productInfo.product_Name}
+          </h2>
+          <div
+            className={`relative flex w-full item-center align-middle my-auto space-x-4`}
+          >
+            <h3 className={`text-sm text-gray-400`}>Seller: SnC</h3>
+            <Image
+              alt="img"
+              // className={`p-2 border-[1px] border-gray-400 rounded-full h-fit`}
+              src={`/fa.png`}
+              layout="fixed"
+              objectFit="cover"
+              width={60}
+              height={25}
+            />
+          </div>
+          <div
+            className={`relative flex w-full pt-4 space-x-3 items-center align-middle`}
+          >
+            <div className={`relative text-sm text-gray-400`}>
+              <div
+                className={`absolute flex h-[1px] bg-gray-500 w-full justify-center mt-[10px]`}
+              />
+              ₹{Math.floor(props.productInfo.product_Price * 1.38)}
+            </div>
+            <p className={`relative text-md font-semibold`}>
+              ₹{props.productInfo.product_Price}
+            </p>
+            <p
+              className={`relative text-sm font-semibold text-red-400`}
+            >{`8% Off 2  offers applied`}</p>
+          </div>
+        </div>
+        <div className={`relativ flex w-full space-x-8 justify-start py-2`}>
+          <button
+            onClick={() => {}}
+            className={`relative text-md font-medium hover:text-blue-600`}
+          >
+            SAVE FOR LATER
+          </button>
+          <button
+            onClick={() => {}}
+            className={`relative text-md font-medium hover:text-blue-600`}
+          >
+            REMOVE
+          </button>
+        </div>
+      </div>
+      <div
+        className={`relative flex max-w-[17.5%] h-full text-xs font-medium `}
+      >
+        <p className={`relative`}>
+          Delivery in 2 days, Sun | Free ₹40
+        </p>
+      </div>
     </div>
   );
 };

@@ -44,6 +44,7 @@ export const getUserDetails = async (userInfo: any): Promise<UserDetails> => {
   user.user_Gender = userInfo.data()?.user_Gender;
   user.user_Mobile_Number = userInfo.data()?.user_Mobile_Number;
   user.user_Age = userInfo.data()?.user_Age;
+  user.user_Address = userInfo.data()?.user_Address;
   user.user_Address_Details = userInfo.data()?.user_Address_Details;
   user.user_Body_Type = userInfo.data()?.user_Body_Type;
   user.user_Body_Shape = userInfo.data()?.user_Body_Shape;
