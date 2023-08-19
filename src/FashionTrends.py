@@ -13,8 +13,3 @@ class FashionTrends:
     def getGlobalFashionTrends(self):
         response = requests.get(GLOBAL_FASHION_ENDPOINT)
         return json.loads(response.content)
-
-    def getPersonalFashionTrends(self):
-        # response = requests.get(PERSONAL_FASHION_ENDPOINT+self.trendPrompt)
-        # return json.loads(response.content)
-        return json.dumps({"SOCIAL_TRENDS":"","INFLUENCER_TRENDS":""})

@@ -15,9 +15,8 @@ class FashionGenerator:
         self.chatCompletionObject = ChatCompletionObject()
 
     def getGeneratorResponse(self):
-        _personalizedTrends = json.loads(self.fashionTrend.getPersonalFashionTrends())
 
-        _fashionOutfitDescp = self.generateFashionableOutfitDescription(_personalizedTrends)
+        _fashionOutfitDescp = self.generateFashionableOutfitDescription()
 
         _urlResponseList = self.getProductMatches(_fashionOutfitDescp)
 
@@ -26,7 +25,7 @@ class FashionGenerator:
                 "userId": self.userID,
                 "prompt": {
                     "type": "assistant",
-                    "displayMsg": "Generated Outfits - ",
+                    "displayMsg": _fashionOutfitDescp["message"],
                     "promptMsg": _fashionOutfitDescp,
                     "responseList": _urlResponseList
                 }
@@ -38,21 +37,20 @@ class FashionGenerator:
                     "type": "assistant",
                     "displayMsg": _fashionOutfitDescp["message"],
                     "promptMsg": _fashionOutfitDescp,
-                    "responseList": _urlResponseList
+                    "responseList": []
                 }
             }
 
         _pushToDB = self.chatCompletionObject.pushFashionCompletionMessages(_responseJson)
 
-        return _fashionOutfitDescp["message"]
+        return _responseJson
 
-    def generateFashionableOutfitDescription(self, _personalizedTrends):
+    def generateFashionableOutfitDescription(self):
 
         chatCompletionObject = self.chatCompletionObject.getFashionCompletionPrompt(self.userID, self.fashionPrompt)
 
         promptMessage = KeyVault.getKeyValue("OPENAI_FASHION_GENERATOR_PROMPT").format(
-            Customer_Prompt=self.fashionPrompt, Customer_Fashion_Trends=_personalizedTrends["SOCIAL_TRENDS"],
-            Customer_Influencer_Trends=_personalizedTrends["INFLUENCER_TRENDS"])
+            Customer_Prompt=self.fashionPrompt)
 
         chatCompletionObject.append({"role": "user", "content": promptMessage})
 
