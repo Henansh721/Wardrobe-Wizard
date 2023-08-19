@@ -32,7 +32,7 @@ export default function Profile() {
       doc(db, USER_COLLECTION_NAME, "CRrie9tuvow0lmrMDbO0"),
       async (doc) => {
         let user = await getUserDetails(doc);
-        console.log(user);
+        // console.log(user);
         setUserDetails(user);
         setOrderList(user.order_History_List);
         setCartList(user.cart_Product_List);

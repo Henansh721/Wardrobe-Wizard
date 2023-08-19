@@ -46,11 +46,13 @@ export default function ChatBox(props: Props) {
   };
   const conversationClearHandler = async () => {
     setIsConversationOn(false);
-    setGlobalChatList([]);
-    const docRef = doc(db, USER_COLLECTION_NAME, userId);
-    const response = await updateDoc(docRef, {
-      user_Prompts_List: [],
-    });
+    if (globalChatList.length > 0) {
+      setGlobalChatList([]);
+      const docRef = doc(db, USER_COLLECTION_NAME, userId);
+      const response = await updateDoc(docRef, {
+        user_Prompts_List: [],
+      });
+    }
   };
 
   const messageSubmitHandler = async (event: any) => {
@@ -67,10 +69,13 @@ export default function ChatBox(props: Props) {
         promptMsg: {},
         responseList: [],
       };
+      console.log(globalChatList);
       list.push(obj);
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
+      console.log(list);
+
       userPromptApiHandler(userId, obj);
     }
   };
@@ -101,6 +106,7 @@ export default function ChatBox(props: Props) {
         whileInView={{ opacity: 1, x: 0 }}
         className={`relative flex flex-col right-0 w-full h-full lg:w-[50%] xl:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
       >
+        {/* Top Header for showing the the name of the chatbot */}
         <div
           className={`relative top-0 w-full h-[7%] px-1 py-2 bg-[#27293e] rounded-tl-xl z-30`}
         >
@@ -118,6 +124,8 @@ export default function ChatBox(props: Props) {
             src={"/cross.png"}
           />
         </div>
+
+        {/* Option section to select various options */}
         <div
           className={`absolute my-auto justify-center align-middle items-center w-full h-full flex flex-col ${
             isConversationOn ? "z-0" : "z-20"
@@ -176,8 +184,9 @@ export default function ChatBox(props: Props) {
           </button>
         </div>
 
+        {/* Middle for displaying the text */}
         <div
-          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-10 mx-auto`}
+          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-30 mx-auto`}
         >
           {globalChatList.map((prompt: any, index: number) => {
             if (prompt.type === "user") {
@@ -187,7 +196,7 @@ export default function ChatBox(props: Props) {
                   className="relative flex flex-row-reverse w-full mt-3"
                 >
                   <div className="relative flex flex-row max-w-[85%]">
-                    <div className="rounded-l-full rounded-br-full overflow-y-scroll bg-blue-700 text-white overflow-auto break-all py-2 px-5">
+                    <div className="rounded-l-3xl rounded-br-3xl overflow-y-scroll bg-blue-700 text-white overflow-auto break-all py-2 px-5">
                       {prompt.displayMsg}
                     </div>
                   </div>
@@ -210,7 +219,7 @@ export default function ChatBox(props: Props) {
                         objectFit="cover"
                       />
                     </div>
-                    <div className="rounded-r-full rounded-bl-full bg-[#27293e] text-white overflow-hidden break-all py-2 px-5">
+                    <div className="rounded-r-3xl rounded-bl-3xl bg-[#27293e] text-white overflow-hidden break-all py-2 px-5">
                       {prompt.displayMsg}
                     </div>
                   </div>
@@ -254,9 +263,8 @@ export default function ChatBox(props: Props) {
           })}
         </div>
 
-        <div
-          className={`relative flex flex-col bottom-0 w-full h-[10%] pb-4 pt-1 z-30`}
-        >
+        {/* Bottom for entering the text */}
+        <div className={`relative flex flex-col w-full h-[10%] pb-4 pt-1 z-30`}>
           {/* <div
             className={`absolute flex w-fit left-10 justify-center align-middle items-center text-center space-x-1 mx-auto top-0 -mt-10 z-40 p-1 rounded-full`}
           >
