@@ -46,6 +46,8 @@ export default function ChatBox(props: Props) {
   };
   const conversationClearHandler = async () => {
     setIsConversationOn(false);
+    props.setDisplayImgUrl("");
+    props.setFlipkartUrl("");
     if (globalChatList.length > 0) {
       setGlobalChatList([]);
       const docRef = doc(db, USER_COLLECTION_NAME, userId);
@@ -104,7 +106,7 @@ export default function ChatBox(props: Props) {
         initial={{ opacity: 0.0, x: 50 }}
         transition={{ duration: 2.0, type: "spring" }}
         whileInView={{ opacity: 1, x: 0 }}
-        className={`relative flex flex-col right-0 w-full h-full lg:w-[50%] xl:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
+        className={`relative flex flex-col right-0 w-full h-full md:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
       >
         {/* Top Header for showing the the name of the chatbot */}
         <div
