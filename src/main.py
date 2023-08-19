@@ -23,7 +23,7 @@ def post_personalised_endpoint():
 
         outfits_assistant = TrendingOutfitUtil()
 
-        with futures.ProcessPoolExecutor() as executor:
+        with futures.ThreadPoolExecutor() as executor:
             trendSubmission = executor.submit(outfits_assistant.getTrendingOutfitJSON,
                                               _chatClassifierResponse["searchTerm"], True,
                                               isGlobal)
