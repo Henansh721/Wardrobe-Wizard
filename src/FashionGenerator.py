@@ -18,6 +18,8 @@ class FashionGenerator:
 
         _fashionOutfitDescp = self.generateFashionableOutfitDescription()
 
+        print("outFit Descp -->>>", _fashionOutfitDescp)
+
         _urlResponseList = self.getProductMatches(_fashionOutfitDescp)
 
         if _fashionOutfitDescp["status"] == 'fashion outfit generated':
