@@ -17,7 +17,7 @@ export const userPromptApiHandler = async () => {
   const response = await fetch("https://fashion-outfit-generator.onrender.com/generate/outfit", {
     method: "POST",
     body: JSON.stringify({
-      userId: "CRrie9tuvow0lmrMDbO0",
+      userID: "CRrie9tuvow0lmrMDbO0",
       prompt: "Hi, how are you?",
     }),
     headers: {
