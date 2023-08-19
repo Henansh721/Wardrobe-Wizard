@@ -8,11 +8,11 @@ import { USER_COLLECTION_NAME } from "@/lib/helper";
 import { db } from "@/lib/firebase";
 
 export const userPromptApiHandler = async (userId: string, prompt: any) => {
-  const response = await fetch("https://fashion-outfit-generator.onrender.com/generate/outfit", {
+  const response = await fetch("/api/prompt/pushPromptDetails", {
     method: "POST",
     body: JSON.stringify({
       userId: userId,
-      prompt: prompt.displayMsg,
+      prompt: prompt,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function ChatBox(props: Props) {
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      // userPromptApiHandler(userId, obj);
+      userPromptApiHandler(userId, obj);
     }
   };
 
