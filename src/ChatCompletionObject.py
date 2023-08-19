@@ -4,22 +4,18 @@ from UserDetail import UserDetails
 
 import re, json, requests
 
-GET_CHAT_COMPLETION_ENDPOINT = KeyVault.getKeyValue("GET_CHAT_COMPLETION_ENDPOINT")
-PUSH_CHAT_COMPLETION_ENDPOINT = KeyVault.getKeyValue("PUSH_CHAT_COMPLETION_ENDPOINT")
-
-
 class ChatCompletionObject:
     def __init__(self):
         pass
 
     def fetchFashionCompletionMessages(self, _userID):
-        print("Value-->>",GET_CHAT_COMPLETION_ENDPOINT+_userID)
-        response = requests.get(GET_CHAT_COMPLETION_ENDPOINT+_userID)
+        print("Value-->>",KeyVault.getKeyValue("GET_CHAT_COMPLETION_ENDPOINT")+_userID)
+        response = requests.get(KeyVault.getKeyValue("GET_CHAT_COMPLETION_ENDPOINT")+_userID)
         return json.loads(response.content)
     
     def pushFashionCompletionMessages(self, _responseJson):
 
-        response = requests.post(PUSH_CHAT_COMPLETION_ENDPOINT, json= _responseJson)
+        response = requests.post(KeyVault.getKeyValue("PUSH_CHAT_COMPLETION_ENDPOINT"), json= _responseJson)
         return response.status_code
     
 

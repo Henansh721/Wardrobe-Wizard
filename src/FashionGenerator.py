@@ -20,9 +20,8 @@ class FashionGenerator:
 
         print("outFit Descp -->>>", _fashionOutfitDescp)
 
-        _urlResponseList = self.getProductMatches(_fashionOutfitDescp)
-
         if _fashionOutfitDescp["status"] == 'fashion outfit generated':
+            _urlResponseList = self.getProductMatches(_fashionOutfitDescp['message'])
             _responseJson = {
                 "userId": self.userID,
                 "prompt": {

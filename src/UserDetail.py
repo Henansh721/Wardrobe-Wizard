@@ -3,9 +3,6 @@ import requests
 import json
 from KeyVault import KeyVault
 
-GET_ENDPOINT = KeyVault.getKeyValue("USER_GET_ENDPOINT")
-UPDATE_ENDPOINT = KeyVault.getKeyValue("USER_UPDATE_ENDPOINT")
-
 class UserDetails:
     def __init__(self, userID):
         self.userId = userID
@@ -36,11 +33,11 @@ class UserDetails:
         self.orderHistoryList = _userDetails["order_History_List"]
 
     def fetchUserDetails(self):
-        response = requests.get(GET_ENDPOINT+self.userId)
+        response = requests.get(KeyVault.getKeyValue("USER_GET_ENDPOINT")+self.userId)
         return json.loads(response.content)
     
     def updateUserDetails(self, userDetailsJson):
-        updateURL = UPDATE_ENDPOINT + self.userId + "&user_Body_Type=" + json.dumps(userDetailsJson["user_Body_Type"])+ "&user_Style_Tags_List=" + json.dumps(userDetailsJson["user_Style_Tags_List"])+ "&user_Purchase_Brand_Name_Map=" + json.dumps(userDetailsJson["user_Purchase_Brand_Name_Map"]) + "&user_Style_Colors_Map=" + json.dumps(userDetailsJson["user_Style_Colors_Map"])
+        updateURL = KeyVault.getKeyValue("USER_UPDATE_ENDPOINT") + self.userId + "&user_Body_Type=" + json.dumps(userDetailsJson["user_Body_Type"])+ "&user_Style_Tags_List=" + json.dumps(userDetailsJson["user_Style_Tags_List"])+ "&user_Purchase_Brand_Name_Map=" + json.dumps(userDetailsJson["user_Purchase_Brand_Name_Map"]) + "&user_Style_Colors_Map=" + json.dumps(userDetailsJson["user_Style_Colors_Map"])
         response = requests.get(updateURL)  
           
         return response.status_code
