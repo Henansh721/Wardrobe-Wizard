@@ -36,8 +36,8 @@ def process_data(data):
     for key, value in data.items():
         # do an api call to bing image extractor to get the image
         bing_api = BingImageSearchAPI(os.getenv('subscription_key'))
-        thumbnail_url = bing_api.search_images(value + " Flipkart")
-        result.append({"imageUrl":thumbnail_url,"flipkartUrl" : "https://www.flipkart.com/"})
+        (thumbnail_url,descp) = bing_api.search_images(value + " Flipkart")
+        result.append({"imageUrl":thumbnail_url,"flipkartUrl" : "https://www.flipkart.com/", "outfitName":descp})
     
     return result
 

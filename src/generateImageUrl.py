@@ -22,6 +22,6 @@ class BingImageSearchAPI:
             images = data["value"]
             if images:
                 image_info = images[0]
-                return image_info.get("thumbnailUrl")
+                return (image_info.get("thumbnailUrl"),query[:-9])
 
         return None
