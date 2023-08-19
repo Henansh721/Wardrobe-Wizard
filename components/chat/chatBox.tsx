@@ -58,7 +58,7 @@ export default function ChatBox(props: Props) {
   const messageSubmitHandler = async (event: any) => {
     event.preventDefault();
     const txt = textMessage.trim();
-    if (txt.length > 0 && globalChatList.length % 2 === 0) {
+    if (txt.length > 0) {
       setTextMessage("");
       setIsConversationOn(true);
       let list = globalChatList;
@@ -281,7 +281,7 @@ export default function ChatBox(props: Props) {
         <div
           className={`relative flex flex-col w-full min-h-[10%] max-h-[17.5%] pb-4 pt-1 z-30`}
         >
-          {globalChatList.length > 0 && globalChatList.length % 2 == 1 && (
+          {/* {globalChatList.length > 0 && globalChatList.length % 2 == 1 && (
             <div
               className={`relative z-20 flex w-fit align-middle items-center text-center space-x-2 bottom-0 p-1 mx-auto`}
             >
@@ -296,7 +296,7 @@ export default function ChatBox(props: Props) {
               </div>
               <p className={`font-mono text-xs font-medium`}>Responding...</p>
             </div>
-          )}
+          )} */}
           <form
             onSubmit={messageSubmitHandler}
             className={`relative flex w-full md:w-[92.5%] mx-auto align-middle items-center space-x-2`}
