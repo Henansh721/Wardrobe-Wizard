@@ -25,7 +25,7 @@ class FashionGenerator:
                 "userId": self.userID,
                 "prompt": {
                     "type": "assistant",
-                    "displayMsg": _fashionOutfitDescp["message"],
+                    "displayMsg": "Here are the Outfits for you.",
                     "promptMsg": _fashionOutfitDescp,
                     "responseList": _urlResponseList
                 }
