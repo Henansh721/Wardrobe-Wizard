@@ -83,4 +83,6 @@ class FashionGenerator:
             raise Exception("NO JSON FOUND IN OPENAI RESPONSE")
 
     def getProductMatches(self, outfitDescription):
-        return []
+        _OutfitLinkEndPoint = KeyVault.getKeyValue("OUTFIT_LINK_ENDPOINT")
+        response = requests.post(_OutfitLinkEndPoint, json=outfitDescription)
+        return response.json()
