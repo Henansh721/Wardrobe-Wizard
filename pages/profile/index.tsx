@@ -14,7 +14,7 @@ import { ProductDetails } from "@/lib/classModels/product/productDetails";
 import { format } from "date-fns";
 
 type Props = {
-  userPrefInfo: any;
+  // userPrefInfo: any;
 }
 
 export default function Profile(props: Props) {
@@ -728,23 +728,23 @@ export const FaqList = (props: any) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  const response = await fetch(
-    "https://fashion-preference-generator.onrender.com/generate/preference",
-    {
-      method: "POST",
-      body: JSON.stringify({
-        userID: "CRrie9tuvow0lmrMDbO0",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+// export const getServerSideProps = async () => {
+//   const response = await fetch(
+//     "https://fashion-preference-generator.onrender.com/generate/preference",
+//     {
+//       method: "POST",
+//       body: JSON.stringify({
+//         userID: "CRrie9tuvow0lmrMDbO0",
+//       }),
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
 
-  return {
-    props: {
-      userPrefInfo: JSON.stringify(response),
-    }
-  };
-}
+//   return {
+//     props: {
+//       userPrefInfo: JSON.stringify(response),
+//     }
+//   };
+// }
