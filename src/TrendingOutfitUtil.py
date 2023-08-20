@@ -7,28 +7,16 @@ from concurrent import futures
 from FashionTrendUpdater import FashionTrendUpdater
 
 
-def mergeTrendingOutfitJson(_results):
-    outfitJson = {}
-    for _json in _results:
-        outfitJson.update(_json)
-    return outfitJson
-
-
 class TrendingOutfitUtil:
 
-    def getTrendingOutfits(self, _url, isSocial):
-
-        result = WebPageParser().get_cleaned_text(_url)
-
-        if result == "":
-            return {}
+    def getTrendingOutfits(self, top_results, isSocial):
 
         promptMessage = KeyVault.getKeyValue(
             "OPENAI_PERSONAL_FASHION_SYSTEM_PROMPT") if isSocial else KeyVault.getKeyValue(
             "OPENAI_PERSONAL_INFLUENCER_SYSTEM_PROMPT")
 
         chatCompletionObject = [{"role": "system", "content": promptMessage},
-                                {"role": "user", "content": result}]
+                                {"role": "user", "content": json.dumps(top_results)}]
 
         response = OpenAIChatUtil(KeyVault.getKeyValue('AZURE_OPENAI_DEPLOYMENT'),
                                   chatCompletionObject).create_chat_completion()
@@ -39,8 +27,7 @@ class TrendingOutfitUtil:
             jsonResponse = json.loads(json_string)
             return jsonResponse
         else:
-            print("NO JSON FOUND IN OPENAI RESPONSE -->>", _url)
-            return {}
+            raise Exception("NO JSON FOUND IN OPENAI RESPONSE")
 
     def getTrendingOutfitJSON(self, _trend_search_term, isSocial, isGlobal):
         top_results = []
@@ -62,19 +49,24 @@ class TrendingOutfitUtil:
 
         _topResultSize = int(KeyVault.getKeyValue("TOP_RESULT_SIZE"))
 
+        webScrapper = WebPageParser()
+
         with futures.ThreadPoolExecutor(max_workers=len(urlList)) as executor:
 
-            scrappedResponse = [executor.submit(self.getTrendingOutfits, _url, isSocial) for _url in urlList]
+            scrappedResponse = []
+
+            for url in urlList:
+                scrappedResponse.append(executor.submit(webScrapper.get_cleaned_text, url))
 
             for response in futures.as_completed(scrappedResponse):
                 if len(top_results) >= _topResultSize:
                     response.cancel()
                 else:
                     result = response.result()
-                    if result != {}:
+                    if result != "":
                         top_results.append(result)
 
-        trendsResponse = mergeTrendingOutfitJson(top_results)
+        trendsResponse = self.getTrendingOutfits(top_results, isSocial)
 
         if isGlobal:
             _socialUpdate = FashionTrendUpdater().updateFashionTrends(trendsResponse, isSocial)
