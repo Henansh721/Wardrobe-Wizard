@@ -13,7 +13,11 @@ import { getUserDetails } from "@/lib/firebase/functionHandler";
 import { ProductDetails } from "@/lib/classModels/product/productDetails";
 import { format } from "date-fns";
 
-export default function Profile() {
+type Props = {
+  userPrefInfo: any;
+}
+
+export default function Profile(props: Props) {
   const router = useRouter();
   const [userDetail, setUserDetails] = useState<UserDetails>(new UserDetails());
   let sectionList = ["personal-info", "my-orders", "my-cart", "gpt-details"];
@@ -723,3 +727,26 @@ export const FaqList = (props: any) => {
     </div>
   );
 };
+
+export const getServerSideProps = async () => {
+  const response = await fetch(
+    "https://fashion-preference-generator.onrender.com/generate/preference",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        userID: "CRrie9tuvow0lmrMDbO0",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  console.log(response);
+
+  return {
+    props: {
+      userPrefInfo: JSON.stringify(response),
+    }
+  };
+}

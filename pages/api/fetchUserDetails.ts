@@ -81,6 +81,27 @@ async function handler(req: any, res: any) {
       orderList.push(od);
     }
 
+    for (let prd of user.cart_Product_Id_List) {
+      let pid = prd.product_Id;
+      let pCtg = prd.product_Category;
+
+      const productRef = doc(db, pCtg, pid);
+      const pInfo = await getDoc(productRef);
+
+      let od = {
+        product_Name: pInfo.data()?.product_Name,
+        product_Color: pInfo.data()?.product_Color,
+        product_Description: pInfo.data()?.product_Description,
+        product_Brand_Name: pInfo.data()?.product_Brand_Name,
+        product_Category: pInfo.data()?.product_Category,
+        product_Subcategory: pInfo.data()?.product_Subcategory,
+        product_Tags_List: pInfo.data()?.product_Tags_List,
+        product_Dimensions: pInfo.data()?.product_Dimensions,
+      };
+
+      orderList.push(od);
+    }
+
     let obj = {
       user_Name: user.user_Name,
       user_Email_Id: user.user_Email_Id,
