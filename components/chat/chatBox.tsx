@@ -29,6 +29,7 @@ type Props = {
   setShowChatBox: Function;
   setDisplayImgUrl: Function;
   setFlipkartUrl: Function;
+  setOutfitName: Function;
 };
 
 export default function ChatBox(props: Props) {
@@ -38,6 +39,7 @@ export default function ChatBox(props: Props) {
   const [gptMsgCnt, setGptMsgCnt] = useState<number>(0);
   const [textMessage, setTextMessage] = useState<string>("");
   const [isConversationOn, setIsConversationOn] = useState<boolean>(false);
+  const [isResponding, setIsResponding] = useState<boolean>(false);
   const [selectOrderHistory, setSelectOrderHistory] = useState<boolean>(true);
   const [globalChatList, setGlobalChatList] = useState<any[]>([]);
 
@@ -48,8 +50,10 @@ export default function ChatBox(props: Props) {
     setIsConversationOn(false);
     props.setDisplayImgUrl("");
     props.setFlipkartUrl("");
+    props.setOutfitName("");
     if (globalChatList.length > 0) {
       setGlobalChatList([]);
+      setIsResponding(false);
       const docRef = doc(db, USER_COLLECTION_NAME, userId);
       const response = await updateDoc(docRef, {
         user_Prompts_List: [],
@@ -60,9 +64,10 @@ export default function ChatBox(props: Props) {
   const messageSubmitHandler = async (event: any) => {
     event.preventDefault();
     const txt = textMessage.trim();
-    if (txt.length > 0) {
+    if (txt.length > 0 && !isResponding) {
       setTextMessage("");
       setIsConversationOn(true);
+      setIsResponding(true);
       let list = globalChatList;
       list = list.reverse();
       let obj = {
@@ -71,16 +76,18 @@ export default function ChatBox(props: Props) {
         promptMsg: {},
         responseList: [],
       };
-      // console.log(globalChatList);
+      console.log(globalChatList);
       list.push(obj);
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      // console.log(list);
+      console.log(list);
 
       userPromptApiHandler(userId, obj);
     }
   };
+
+  const alkamistHandler = () => {};
 
   useEffect(() => {
     const updateUserChatList = onSnapshot(
@@ -88,6 +95,11 @@ export default function ChatBox(props: Props) {
       (doc) => {
         let pList = doc.data()?.user_Prompts_List;
         let revList = pList.reverse();
+        if (revList.length > 0 && revList[0].type === "user") {
+          setIsResponding(true);
+        } else {
+          setIsResponding(false);
+        }
         setGlobalChatList(revList);
         if (pList.length > 0 && !isConversationOn) {
           setIsConversationOn(true);
@@ -106,7 +118,7 @@ export default function ChatBox(props: Props) {
         initial={{ opacity: 0.0, x: 50 }}
         transition={{ duration: 2.0, type: "spring" }}
         whileInView={{ opacity: 1, x: 0 }}
-        className={`relative flex flex-col right-0 w-full h-full md:w-[45%] rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
+        className={`relative flex flex-col right-0 w-full h-full rounded-l-xl bg-white border-l-[2px] border-gray-300 `}
       >
         {/* Top Header for showing the the name of the chatbot */}
         <div
@@ -171,6 +183,7 @@ export default function ChatBox(props: Props) {
             </button>
           </div>
           <button
+            onClick={alkamistHandler}
             className={`relative flex flex-col w-[87.5%] bg-gray-500 hover:bg-gray-600 cursor-pointer p-[7px] mx-auto rounded-xl text-center justify-center items-center align-middle`}
           >
             <h2
@@ -190,20 +203,6 @@ export default function ChatBox(props: Props) {
         <div
           className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-20 mx-auto`}
         >
-          {/* <div
-            className={`absolute z-20 flex w-fit align-middle items-center text-center space-x-1 bottom-0 p-1 mx-auto`}
-          >
-            <div className={`relative bg-blue-700 h-7 w-7 rounded-full p-1`}>
-              <Image
-                className={`rounded-full`}
-                alt="img"
-                src={"/circles-menu.gif"}
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-            <p className={`font-mono text-xs font-medium`}>Responding</p>
-          </div> */}
           {globalChatList.map((prompt: any, index: number) => {
             if (prompt.type === "user") {
               return (
@@ -254,6 +253,7 @@ export default function ChatBox(props: Props) {
                               onClick={() => {
                                 props.setDisplayImgUrl(fashionObj.imageUrl);
                                 props.setFlipkartUrl(fashionObj.flipkartUrl);
+                                props.setOutfitName(fashionObj.outfitName);
                               }}
                             >
                               <div className={`realtive w-36 h-44 rounded-lg`}>
@@ -283,7 +283,7 @@ export default function ChatBox(props: Props) {
         <div
           className={`relative flex flex-col w-full min-h-[10%] max-h-[17.5%] pb-4 pt-1 z-30`}
         >
-          {/* {globalChatList.length > 0 && globalChatList.length % 2 == 1 && (
+          {isResponding && (
             <div
               className={`relative z-20 flex w-fit align-middle items-center text-center space-x-2 bottom-0 p-1 mx-auto`}
             >
@@ -298,7 +298,7 @@ export default function ChatBox(props: Props) {
               </div>
               <p className={`font-mono text-xs font-medium`}>Responding...</p>
             </div>
-          )} */}
+          )}
           <form
             onSubmit={messageSubmitHandler}
             className={`relative flex w-full md:w-[92.5%] mx-auto align-middle items-center space-x-2`}

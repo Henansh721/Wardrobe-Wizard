@@ -32,6 +32,7 @@ export default function Home() {
   const [showChatBox, setShowChatBox] = useState<boolean>(false);
   const [displayImgUrl, setDisplayImgUrl] = useState<string>("");
   const [flipkartUrl, setFlipkartUrl] = useState<string>("");
+  const [outfitName, setOutfitName] = useState<string>("");
   return (
     <Fragment>
       <Head>
@@ -51,6 +52,7 @@ export default function Home() {
             setShowChatBox={setShowChatBox}
             setDisplayImgUrl={setDisplayImgUrl}
             setFlipkartUrl={setFlipkartUrl}
+            setOutfitName={setOutfitName}
           />
         )}
       </main>

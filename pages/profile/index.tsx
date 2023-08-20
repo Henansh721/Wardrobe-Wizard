@@ -21,11 +21,14 @@ export default function Profile() {
   const [showChatBox, setShowChatBox] = useState<boolean>(false);
   const [displayImgUrl, setDisplayImgUrl] = useState<string>("");
   const [flipkartUrl, setFlipkartUrl] = useState<string>("");
+  const [outfitName, setOutfitName] = useState<string>("");
   const [itemSize, setItemSize] = useState<number[]>([
     10, 20, 30, 40, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
   ]);
   const [orderList, setOrderList] = useState<ProductOrderDetails[]>([]);
   const [cartList, setCartList] = useState<ProductDetails[]>([]);
+  const [maxValue, setMaxValue] = useState<number>(Math.random() * 10000);
+  const [minValue, setMinValue] = useState<number>(Math.random() * 1000);
 
   useEffect(() => {
     const fetchUserDetails = onSnapshot(
@@ -200,34 +203,56 @@ export default function Profile() {
                   <h1
                     className={`relative w-full text-gray-500 font-serif text-xl`}
                   >{`Brand name`}</h1>
-                  <p
-                    className={`relative w-full text-black font-mono text-md font-medium`}
-                  >{`Title of the item`}</p>
+                  <div className={`relative w-full flex flex-col py-2`}>
+                    <h3
+                      className={`relative w-full text-sm font-mono font-semibold`}
+                    >{`Description`}</h3>
+                    <p
+                      className={`relative w-full text-black font-sans text-md font-normal`}
+                    >{`${outfitName}`}</p>
+                  </div>
                   <h1
-                    className={`relative w-full text-black text-2xl font-semibold`}
-                  >{`Price: ₹. XXXX`}</h1>
+                    className={`relative w-full text-black text-xl font-semibold`}
+                  >{`Price: ₹ ${Math.abs(
+                    Math.floor(
+                      Math.floor(Math.random() * (maxValue - minValue)) +
+                        minValue
+                    )
+                  )}`}</h1>
                   <p
                     className={`relative w-full text-gray-600 font-mono text-sm font-medium`}
                   >{`Size`}</p>
                   <div
-                    className={`relative flex w-full px-2 py-1 rounded-md space-x-2 overflow-x-scroll bg-slate-200`}
+                    className={`relative flex w-full px-2 py-1 rounded-md space-x-2 overflow-x-scroll bg-slate-100`}
                   >
                     {itemSize.map((sz: number, index: number) => (
                       <div
                         key={index}
-                        className={`relative flex justify-center items-center align-middle p-1 h-10 w-10 rounded-full bg-blue-200 hover:bg-blue-400 cursor-pointer font-semibold`}
+                        className={`relative flex justify-center items-center align-middle p-1 h-10 w-10 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer font-semibold`}
                       >
                         {sz}
                       </div>
                     ))}
                   </div>
                   <h3
-                    className={`relative w-full text-gray-500 font-serif text-xl`}
+                    className={`relative w-full text-black font-sans text-lg pt-4 font-semibold`}
                   >{`Available Offers`}</h3>
-                  <p className={`p-1`}>Offer-1</p>
-                  <p className={`p-1`}>Offer-2</p>
-                  <p className={`p-1`}>Offer-3</p>
-                  <p className={`p-1`}>Offer-4</p>
+                  <p className={`p-[1.5px] text-sm`}>
+                    Bank Offer {Math.floor(Math.random() * 20)}% off on Credit
+                    Card upto ₹2500 off, on orders above ₹10000
+                  </p>
+                  <p className={`p-[1.5px] text-sm`}>
+                    Bank Offer {Math.floor(Math.random() * 15)}% off on Debit
+                    Card upto ₹1500 off, on orders above ₹5000
+                  </p>
+                  <p className={`p-[1.5px] text-sm`}>
+                    Bank Offer {Math.floor(Math.random() * 18)}% off on Credit
+                    Card upto ₹2000 off, on orders above ₹8000
+                  </p>
+                  <p className={`p-[1.5px] text-sm`}>
+                    Bank Offer {Math.floor(Math.random() * 19)}% off on Debit
+                    Card upto ₹800 off, on orders above ₹5000
+                  </p>
                 </div>
               </div>
             )}
@@ -291,7 +316,7 @@ export default function Profile() {
                 </div>
                 <div
                   onClick={() => {
-                    setProfileSection(sectionList[3]);
+                    // setProfileSection(sectionList[3]);
                   }}
                   className={`relative flex justify-center w-full px-2 py-4 border-[0.5px] border-gray-200 text-gray-500 font-semibold text-lg cursor-pointer ${
                     profileSection === sectionList[3]
@@ -299,7 +324,7 @@ export default function Profile() {
                       : "bg-white"
                   }`}
                 >
-                  GPT Details
+                  Logout
                 </div>
               </div>
               <div
@@ -388,7 +413,7 @@ export default function Profile() {
                   <div
                     className={`relative w-full flex items-center align-middle`}
                   >
-                    <h4 className={`text-md`}>Deliver to: </h4>&nbsp;&nbsp; 
+                    <h4 className={`text-md`}>Deliver to: </h4>&nbsp;&nbsp;
                     <p
                       className={`font-semibold text-md`}
                     >{` ${userDetail.user_Address_Details.location_City} - ${userDetail.user_Address_Details.location_Pincode}`}</p>
@@ -413,12 +438,15 @@ export default function Profile() {
             )}
           </div>
           {showChatBox && (
-            <ChatBox
-              showChatBox={showChatBox}
-              setShowChatBox={setShowChatBox}
-              setDisplayImgUrl={setDisplayImgUrl}
-              setFlipkartUrl={setFlipkartUrl}
-            />
+            <div className={`relative w-full md:w-[35%] h-full flex `}>
+              <ChatBox
+                showChatBox={showChatBox}
+                setShowChatBox={setShowChatBox}
+                setDisplayImgUrl={setDisplayImgUrl}
+                setFlipkartUrl={setFlipkartUrl}
+                setOutfitName={setOutfitName}
+              />
+            </div>
           )}
         </div>
         {!showChatBox && (
@@ -537,9 +565,7 @@ export const ProductCartTab = (props: any) => {
       <div
         className={`relative flex max-w-[17.5%] h-full text-xs font-medium `}
       >
-        <p className={`relative`}>
-          Delivery in 2 days, Sun | Free ₹40
-        </p>
+        <p className={`relative`}>Delivery in 2 days, Sun | Free ₹40</p>
       </div>
     </div>
   );
