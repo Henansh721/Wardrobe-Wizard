@@ -742,8 +742,6 @@ export const getServerSideProps = async () => {
     }
   );
 
-  console.log(response);
-
   return {
     props: {
       userPrefInfo: JSON.stringify(response),

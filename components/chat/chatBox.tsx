@@ -46,6 +46,7 @@ export default function ChatBox(props: Props) {
   const orderHistoryHandler = (val: boolean) => {
     setSelectOrderHistory(val);
   };
+
   const conversationClearHandler = async () => {
     setIsConversationOn(false);
     props.setDisplayImgUrl("");
@@ -85,7 +86,14 @@ export default function ChatBox(props: Props) {
     }
   };
 
-  const alkamistHandler = () => {};
+  const alkamistHandler = () => {
+    let obj = {
+      type: "user",
+      displayMsg: "Suggest me an outfit on your own. I don't have any preferences.",
+      promptMsg: {},
+      responseList: [],
+    }
+  };
 
   useEffect(() => {
     const updateUserChatList = onSnapshot(
