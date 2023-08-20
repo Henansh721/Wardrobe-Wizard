@@ -14,14 +14,14 @@ async function handler(req: any, res: any) {
     const trendsInfo = await getDoc(docRef1);
     let map = trendsInfo.data()?.socail_Media_Trends_Map;
 
-    for (const [key, value] of fashionMap) map[key] = value;
+    const mergedFashionMap = Object.assign({}, fashionMap, map);
 
     const docRef = doc(db, TRENDS_COLLECTION_NAME, FASHION_TRENDS_KEY);
     const response = await setDoc(docRef, {
-      socail_Media_Trends_Map: map,
+      socail_Media_Trends_Map: mergedFashionMap,
     });
 
-    res.status(201).json(map);
+    res.status(201).json(mergedFashionMap);
   } catch (error) {
     res.status(422).json({
       details: null,

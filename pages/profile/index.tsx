@@ -15,7 +15,22 @@ import { format } from "date-fns";
 
 type Props = {
   // userPrefInfo: any;
-}
+};
+
+const hd = async () => {
+  const response = await fetch("/api/trending/insertGlobalFashionInfluencers", {
+    method: "POST",
+    body: JSON.stringify({
+      userID: "CRrie9tuvow0lmrMDbO0",
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  console.log(response);
+  return response;
+};
 
 export default function Profile(props: Props) {
   const router = useRouter();
@@ -58,6 +73,7 @@ export default function Profile(props: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`w-screen h-screen flex flex-col`}>
+        <button onClick={hd}>clk</button>
         <div
           className={`relative flex w-full justify-evenly bg-blue-700 py-2 px-4`}
         >
@@ -442,7 +458,9 @@ export default function Profile(props: Props) {
             )}
           </div>
           {showChatBox && (
-            <div className={`relative w-full md:max-w-[30%] md:min-w-[30%] h-full flex `}>
+            <div
+              className={`relative w-full md:max-w-[30%] md:min-w-[30%] h-full flex `}
+            >
               <ChatBox
                 showChatBox={showChatBox}
                 setShowChatBox={setShowChatBox}
