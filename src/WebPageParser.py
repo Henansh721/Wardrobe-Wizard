@@ -7,8 +7,7 @@ class WebPageParser:
 
     def get_cleaned_text(self, _URL):
         with sync_playwright() as p:
-            browser = p.chromium.launch(
-                executable_path=KeyVault.getKeyValue("BROWSER_PATH"))
+            browser = p.chromium.launch()
             page = browser.new_page()
 
             try:
