@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from TrendingOutfitUtil import *
 from dotenv import load_dotenv
 from concurrent import futures
-from ChatClassifier import ChatClassifier
 
 load_dotenv()
 app = Flask(__name__)
@@ -15,27 +14,18 @@ def post_personalised_endpoint():
 
         isGlobal = (data.get('isGlobal') == "True")
 
-        _chatClassifierResponse = ChatClassifier.getClassifierResponse(data.get("prompt"))
-
-        if not _chatClassifierResponse["isRelated"]:
-            return {"status": _chatClassifierResponse["isRelated"],
-                    "SOCIAL_TRENDS": {}, "INFLUENCER_TRENDS": {}}, 200
-
         outfits_assistant = TrendingOutfitUtil()
 
-        with futures.ProcessPoolExecutor() as executor:
-            trendSubmission = executor.submit(outfits_assistant.getTrendingOutfitJSON,
-                                              _chatClassifierResponse["searchTerm"], True,
+        with futures.ThreadPoolExecutor() as executor:
+            trendSubmission = executor.submit(outfits_assistant.getTrendingOutfitJSON, data.get('trends'), True,
                                               isGlobal)
-            influencersSubmission = executor.submit(outfits_assistant.getTrendingOutfitJSON,
-                                                    _chatClassifierResponse["searchTerm"],
+            influencersSubmission = executor.submit(outfits_assistant.getTrendingOutfitJSON, data.get('influencers'),
                                                     False, isGlobal)
 
         trends_json = trendSubmission.result()
         influencers_json = influencersSubmission.result()
 
-        return {"status": _chatClassifierResponse["isRelated"],
-                "SOCIAL_TRENDS": trends_json, "INFLUENCER_TRENDS": influencers_json}, 200
+        return {"trends": trends_json, "influencers": influencers_json}, 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
