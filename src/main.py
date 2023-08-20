@@ -3,11 +3,9 @@ from TrendingOutfitUtil import *
 from dotenv import load_dotenv
 from concurrent import futures
 from ChatClassifier import ChatClassifier
-from flask_cors import CORS
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/get_fashion_trends', methods=['POST'])
@@ -44,4 +42,4 @@ def post_personalised_endpoint():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5001)
