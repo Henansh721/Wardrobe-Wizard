@@ -17,21 +17,6 @@ type Props = {
   // userPrefInfo: any;
 };
 
-const hd = async () => {
-  const response = await fetch("/api/trending/insertGlobalFashionInfluencers", {
-    method: "POST",
-    body: JSON.stringify({
-      userID: "CRrie9tuvow0lmrMDbO0",
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  console.log(response);
-  return response;
-};
-
 export default function Profile(props: Props) {
   const router = useRouter();
   const [userDetail, setUserDetails] = useState<UserDetails>(new UserDetails());
@@ -73,7 +58,6 @@ export default function Profile(props: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`w-screen h-screen flex flex-col`}>
-        <button onClick={hd}>clk</button>
         <div
           className={`relative flex w-full justify-evenly bg-blue-700 py-2 px-4`}
         >
