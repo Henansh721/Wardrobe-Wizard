@@ -76,12 +76,10 @@ export default function ChatBox(props: Props) {
         promptMsg: {},
         responseList: [],
       };
-      console.log(globalChatList);
       list.push(obj);
       list = list.reverse();
       setUserMsgCnt(userMsgCnt + 1);
       setGlobalChatList(list);
-      console.log(list);
 
       userPromptApiHandler(userId, obj);
     }
@@ -100,7 +98,13 @@ export default function ChatBox(props: Props) {
         } else {
           setIsResponding(false);
         }
-        setGlobalChatList(revList);
+
+        if (revList.length > 0) {
+          setGlobalChatList(revList);
+        }
+        if (revList.length === 0 && globalChatList.length === 1) {
+          setIsResponding(true);
+        }
         if (pList.length > 0 && !isConversationOn) {
           setIsConversationOn(true);
         }

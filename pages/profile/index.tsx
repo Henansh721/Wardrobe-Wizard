@@ -438,7 +438,7 @@ export default function Profile() {
             )}
           </div>
           {showChatBox && (
-            <div className={`relative w-full md:w-[35%] h-full flex `}>
+            <div className={`relative w-full md:max-w-[30%] h-full flex `}>
               <ChatBox
                 showChatBox={showChatBox}
                 setShowChatBox={setShowChatBox}
