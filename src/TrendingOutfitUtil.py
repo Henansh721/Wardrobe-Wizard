@@ -7,18 +7,27 @@ from concurrent import futures
 from FashionTrendUpdater import FashionTrendUpdater
 
 
+def mergeTrendingOutfitJson(_results):
+    outfitJson = {}
+    for _json in _results:
+        outfitJson.update(_json)
+    return outfitJson
+
+
+
 class TrendingOutfitUtil:
 
-    def getTrendingOutfits(self, top_results, isSocial):
+    def getTrendingOutfits(self, _url, isSocial):
 
-        _type = "Fashion" if isSocial else "Fashion Influencer"
-        _contain = "Outfit" if isSocial else "Influencer's Outfit"
+        result = WebPageParser().get_cleaned_text(_url)
 
-        promptMessage = KeyVault.getKeyValue("OPENAI_PERSONAL_FASHION_SYSTEM_PROMPT").format(type=_type,
-                                                                                             contain=_contain)
+        if result == "":
+            return {}
 
-        chatCompletionObject = [{"role": "system", "content": promptMessage},
-                                {"role": "user", "content": json.dumps(top_results)}]
+        prompt = KeyVault.getKeyValue("OPENAI_PERSONAL_FASHION_SYSTEM_PROMPT") if isSocial else KeyVault.getKeyValue("OPENAI_PERSONAL_INFLUENCER_SYSTEM_PROMPT")
+
+        chatCompletionObject = [{"role": "system", "content": prompt},
+                                {"role": "user", "content": result}]
 
         response = OpenAIChatUtil(KeyVault.getKeyValue('AZURE_OPENAI_DEPLOYMENT'),
                                   chatCompletionObject).create_chat_completion()
@@ -29,48 +38,45 @@ class TrendingOutfitUtil:
             jsonResponse = json.loads(json_string)
             return jsonResponse
         else:
-            raise Exception("NO JSON FOUND IN OPENAI RESPONSE")
+            print("NO JSON FOUND IN OPENAI RESPONSE -->>", _url)
+            return {}
 
-    def getTrendingOutfitJSON(self, _trend_search_term, isSocial, isGlobal):
+    def getTrendingOutfitJSON(self, _trend_search_term, isSocial):
         top_results = []
+        urlList = set()
 
-        searchQuery = KeyVault.getKeyValue("PERSONAL_FASHION_TRENDS") if isSocial else KeyVault.getKeyValue(
-            "PERSONAL_INFLUENCER_TRENDS")
+        _urlListSize = int(KeyVault.getKeyValue("URL_LIST_SIZE"))
+        _topResultSize = int(KeyVault.getKeyValue("TOP_RESULT_SIZE"))
 
-        searchQuery = str(searchQuery).format(searchTearm=_trend_search_term)
+        results = BingSearchUtil().getSearchResult(_trend_search_term)
 
-        results = BingSearchUtil().getSearchResult(searchQuery)
+        for result in results[:_urlListSize]:
+            urlList.add(result['url'])
 
-        urlList = []
-
-        for result in results[:10]:
-            urlList.append(result['url'])
-
-        urlList = set(urlList)
-
-        webScrapper = WebPageParser()
+        # for url in urlList:
+        #     result = self.getTrendingOutfits(url, isSocial)
+        #     if result != {}:
+        #         top_results.append(result)
+        #         if len(top_results) >= _topResultSize:
+        #             break
+        #
+        # trendsResponse = mergeTrendingOutfitJson(top_results)
 
         with futures.ThreadPoolExecutor(max_workers=len(urlList)) as executor:
 
-            scrappedResponse = []
-
-            for url in urlList:
-                scrappedResponse.append(executor.submit(webScrapper.get_cleaned_text, url))
+            scrappedResponse = [executor.submit(self.getTrendingOutfits, _url, isSocial) for _url in urlList]
 
             for response in futures.as_completed(scrappedResponse):
                 result = response.result()
-                if result != "":
+                if result != {}:
                     top_results.append(result)
-                if len(top_results) >= 4:
+                if len(top_results) >= _topResultSize:
                     break
 
+            trendsResponse = mergeTrendingOutfitJson(top_results)
+            # _socialUpdate = FashionTrendUpdater().updateFashionTrends(trendsResponse, isSocial)
+
             for remaining_requests in scrappedResponse:
-                if not remaining_requests.done():
-                    remaining_requests.cancel()
-
-        trendsResponse = self.getTrendingOutfits(top_results, isSocial)
-
-        if isGlobal:
-            _socialUpdate = FashionTrendUpdater().updateFashionTrends(trendsResponse, isSocial)
+                remaining_requests.cancel()
 
         return trendsResponse
