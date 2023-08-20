@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
+from KeyVault import KeyVault
 
 
 class WebPageParser:
@@ -7,7 +8,7 @@ class WebPageParser:
     def get_cleaned_text(self, _URL):
         with sync_playwright() as p:
             browser = p.chromium.launch(
-                executable_path="C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe")
+                executable_path=KeyVault.getKeyValue("BROWSER_PATH"))
             page = browser.new_page()
 
             try:

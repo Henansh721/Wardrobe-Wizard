@@ -53,15 +53,6 @@ class TrendingOutfitUtil:
         for result in results[:_urlListSize]:
             urlList.add(result['url'])
 
-        # for url in urlList:
-        #     result = self.getTrendingOutfits(url, isSocial)
-        #     if result != {}:
-        #         top_results.append(result)
-        #         if len(top_results) >= _topResultSize:
-        #             break
-        #
-        # trendsResponse = mergeTrendingOutfitJson(top_results)
-
         with futures.ThreadPoolExecutor(max_workers=len(urlList)) as executor:
 
             scrappedResponse = [executor.submit(self.getTrendingOutfits, _url, isSocial) for _url in urlList]
@@ -75,6 +66,9 @@ class TrendingOutfitUtil:
 
             trendsResponse = mergeTrendingOutfitJson(top_results)
             # _socialUpdate = FashionTrendUpdater().updateFashionTrends(trendsResponse, isSocial)
+
+            # if _socialUpdate != 201:
+            #     raise Exception("Unable to Update " + ("Fashion" if isSocial else "Influencer") + "Trends in DB")
 
             for remaining_requests in scrappedResponse:
                 remaining_requests.cancel()
