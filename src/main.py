@@ -24,9 +24,6 @@ def post_personalised_endpoint():
         trends_json = trendSubmission.result()
         influencers_json = influencersSubmission.result()
 
-        # trends_json = outfits_assistant.getTrendingOutfitJSON(data.get('influencer'), True)
-        # influencers_json = trends_json
-
         return {"trends": trends_json, "influencers": influencers_json}, 200
 
     except Exception as e:

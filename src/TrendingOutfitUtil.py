@@ -65,10 +65,10 @@ class TrendingOutfitUtil:
                     break
 
             trendsResponse = mergeTrendingOutfitJson(top_results)
-            # _socialUpdate = FashionTrendUpdater().updateFashionTrends(trendsResponse, isSocial)
+            _socialUpdate = FashionTrendUpdater().updateFashionTrends(trendsResponse, isSocial)
 
-            # if _socialUpdate != 201:
-            #     raise Exception("Unable to Update " + ("Fashion" if isSocial else "Influencer") + "Trends in DB")
+            if _socialUpdate != 201:
+                raise Exception("Unable to Update " + ("Fashion" if isSocial else "Influencer") + "Trends in DB")
 
             for remaining_requests in scrappedResponse:
                 remaining_requests.cancel()
