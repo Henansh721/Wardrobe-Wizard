@@ -114,7 +114,7 @@ export default function ChatBox(props: Props) {
     return () => {
       updateUserChatList();
     };
-  }, [isConversationOn]);
+  }, [globalChatList.length, isConversationOn]);
 
   return (
     <Fragment>
@@ -205,19 +205,17 @@ export default function ChatBox(props: Props) {
 
         {/* Middle for displaying the text */}
         <div
-          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-20 mx-auto`}
+          className={`relative flex flex-col-reverse my-1 w-[92.5%] h-[83%] overflow-y-scroll z-20 mx-auto text-justify whitespace-normal`}
         >
           {globalChatList.map((prompt: any, index: number) => {
             if (prompt.type === "user") {
               return (
                 <div
                   key={index}
-                  className="relative flex flex-row-reverse w-full mt-3"
+                  className="relative flex flex-row-reverse w-full mt-3 text-justify whitespace-normal"
                 >
-                  <div className="relative flex flex-row max-w-[85%]">
-                    <div className="rounded-l-3xl rounded-br-3xl overflow-y-scroll bg-blue-700 text-white overflow-auto break-all py-2 px-5">
-                      {prompt.displayMsg}
-                    </div>
+                  <div className="relative flex flex-row max-w-[85%] rounded-l-3xl rounded-br-3xl overflow-y-scroll bg-blue-700 text-white overflow-auto break-all py-2 px-5 text-justify whitespace-normal">
+                    {prompt.displayMsg}
                   </div>
                 </div>
               );
@@ -227,7 +225,7 @@ export default function ChatBox(props: Props) {
                   key={index}
                   className="relative flex flex-col space-y-1 w-full mt-3"
                 >
-                  <div className="relative flex flex-row max-w-[85%] space-x-[1px]">
+                  <div className="relative flex flex-row max-w-[85%] space-x-[1px] text-justify whitespace-normal">
                     <div
                       className={`relative bg-blue-700 h-5 w-5 rounded-full p-3 top-0 left-0`}
                     >
@@ -238,7 +236,7 @@ export default function ChatBox(props: Props) {
                         objectFit="cover"
                       />
                     </div>
-                    <div className="rounded-r-3xl rounded-bl-3xl bg-[#27293e] text-white overflow-hidden break-all py-2 px-5">
+                    <div className="rounded-r-3xl rounded-bl-3xl bg-[#27293e] text-white overflow-hidden break-all py-2 px-5 text-justify whitespace-normal">
                       {prompt.displayMsg}
                     </div>
                   </div>
