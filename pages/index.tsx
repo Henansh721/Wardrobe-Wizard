@@ -5,28 +5,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import ChatBox from "@/components/chat/chatBox";
 
-export const updateAPI = async () => {
-  const response = await fetch("/api/user/updateUserPrompt", {
-    method: "POST",
-    body: JSON.stringify({
-      userId: "CRrie9tuvow0lmrMDbO0",
-      prompt: {
-        type: "user",
-        displayMsg: "Hello There, Wassup!",
-        promptMsg: {},
-        responseList: [],
-      },
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data = await response.json();
-  console.log(data);
-  return data;
-};
-
 export default function Home() {
   const router = useRouter();
   const [showChatBox, setShowChatBox] = useState<boolean>(false);
@@ -40,8 +18,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`relative flex`}>
-        {/* <button onClick={updateAPI}>Post</button> */}
-        <div className={`relative flex flex-col w-full`}>
+        <div className={`relative flex flex-col w-full space-y-1`}>
           <h2 className={`bg-blue-400 text-white`}>Main Page</h2>
           <Link href={`/addProduct`}>Add Product</Link>
           <Link href={`/profile`}>Profile</Link>
